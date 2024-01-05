@@ -18,18 +18,19 @@ const Headermain = () => {
       <header className="fixed-top site__header">
         <div className="d-flex align-items-center justify-content-between">
           <Link  className="navbar-brand nav_ac" to="/">
-            {logotext}
+            {/* {logotext} */}
           </Link>
           <div className="d-flex align-items-center">
-          <Themetoggle />
-          {/* <button className="menu__button  nav_ac" onClick={handleToggle}>
-            {!isActive ? <VscClose /> : <VscGrabber />}
-          </button> */}
-          
+            {/* <Link  onClick={handleToggle} to="/" className="my-3">Home</Link>
+            <Link  onClick={handleToggle} to="/portfolio" className="my-3"> Portfolio</Link>
+            <Link onClick={handleToggle} to="/about" className="my-3">About</Link>
+            <Link onClick={handleToggle} to="/contact" className="my-3"> Contact</Link> */}
+            <Themetoggle />
+
           </div>
         </div>
 
-        <div className={`site__navigation ${!isActive ? "menu__opend" : ""}`}>
+        {/* <div className={`site__navigation ${!isActive ? "menu__opend" : ""}`}>
           <div className="bg__menu h-100">
             <div className="menu__wrapper">
               <div className="menu__container p-3">
@@ -58,12 +59,12 @@ const Headermain = () => {
             </div>
             <p className="copyright m-0">copyright __ {logotext}</p>
           </div>
-        </div>
+        </div> */}
       </header>
-      <div className="br-top"></div>
+      {/* <div className="br-top"></div>
       <div className="br-bottom"></div>
       <div className="br-left"></div>
-      <div className="br-right"></div>
+      <div className="br-right"></div> */}
       
     </>
   );

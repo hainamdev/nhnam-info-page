@@ -25,7 +25,7 @@
     padding: 5px 15px;
     margin: 0;
     border: unset;
-    background: var(--primary-color);
+    /* background: var(--primary-color); */
     font-size: 1.25rem;
     font-family: Marcellus;
     color: var(--text-color-2);
@@ -204,4 +204,9 @@
     color: var(--text-color-2);
     margin-right: 10px;
     text-decoration: none;
+}
+
+.scrolled {
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,.06);
 }

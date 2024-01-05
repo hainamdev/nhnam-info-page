@@ -1,8 +1,7 @@
 .theme_toggler {
-    background: var(--primary-color);
     z-index: 999999999;
     left: 10px;
-    background: var(--primary-color);
+    /* background: var(--primary-color); */
     display: flex;
     height: 50px;
     align-items: center;

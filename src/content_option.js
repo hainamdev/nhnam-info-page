@@ -12,7 +12,7 @@ const introdata = {
         third: "I develop websites",
     },
     description: "",
-    your_img_url: "https://firebasestorage.googleapis.com/v0/b/my-page-39b31.appspot.com/o/avatar-black.png?alt=media&token=7e42fe20-b491-4919-9e86-057d4db2bf5f",
+    your_img_url: "https://firebasestorage.googleapis.com/v0/b/my-page-39b31.appspot.com/o/1704470445451.png?alt=media&token=578aefc8-a369-44ac-a15e-7d212ec16b17",
 };
 
 const dataabout = {
