@@ -16,7 +16,6 @@ export const Home = () => {
         </Helmet>
         <div className="intro_sec d-block d-lg-flex align-items-center ">
           <div className="text-over">
-
             <div class="container">
               <div class="row">
                 <div class="col-lg-8 col-xl-6">
@@ -28,21 +27,21 @@ export const Home = () => {
                           HAI NAM
                         </span>
                       </h1>
-                        <h4 class="subtitle wow fadeInLeft" data-wow-delay="200ms" data-wow-duration="1000ms" style={{visibility: 'visible'}}>
-                          <Typewriter
-                            options={{
-                              strings: ["Fullstack and Salesforce Developer"],
-                              autoStart: true,
-                              loop: true,
-                              deleteSpeed: 10,
-                            }}
-                          />
-                        </h4>
-                      </div>
+                      <h4 class="subtitle wow fadeInLeft" data-wow-delay="200ms" data-wow-duration="1000ms" style={{visibility: 'visible'}}>
+                        <Typewriter
+                          options={{
+                            strings: ["Fullstack and Salesforce Developer"],
+                            autoStart: true,
+                            loop: true,
+                            deleteSpeed: 10,
+                          }}
+                        />
+                      </h4>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
           </div>
           <div
             className="h_bg-image order-1 order-lg-2"

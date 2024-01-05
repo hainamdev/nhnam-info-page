@@ -201,7 +201,7 @@ section {
     position: relative;
     z-index: 3;
     width: 100%;
-    height: 950px;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -240,7 +240,7 @@ section {
 @media (max-width:991.98px) {
     .intro_sec {
         display: block;
-        height: auto!important;
+        height: auto;
     }
     .intro_sec .text,
     .intro_sec .h_bg-image {
@@ -270,8 +270,8 @@ section {
     .text-over .inner .content .title {
         font-size: 50px;
     }
-    /* .intro_sec .h_bg-image {
-        height: 512px ;
-    } */
+    .intro_sec {
+        height: 512px !important;
+    }
 }
 
