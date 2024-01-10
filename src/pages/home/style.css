@@ -236,11 +236,14 @@ section {
 .color-primary {
     color: #000 !important;
 }
+.text-over .container {
+    padding-left: 50px !important;
+}
 
 @media (max-width:991.98px) {
     .intro_sec {
         display: block;
-        height: auto;
+        height: 512px !important;
     }
     .intro_sec .text,
     .intro_sec .h_bg-image {
@@ -264,16 +267,25 @@ section {
         left: 50%;
         transform: translate(-50%, 50%);
     }
+    .text-over .inner .content .title {
+        font-size: 60px;
+    }
+    .text-over .container {
+        padding-left: 0 !important;
+    }
 }
 
 @media only screen and (max-width: 575px){
     .text-over .inner .content .title {
-        font-size: 50px;
+        font-size: 50px !important;
     }
     .intro_sec {
         /* background-color: #f5f5f5; */
         height: 512px !important;
         margin-top: -100px !important;
+    }
+    .text-over .container {
+        padding-left: 20px !important;
     }
     /* .text-over {
         align-items: flex-end;
