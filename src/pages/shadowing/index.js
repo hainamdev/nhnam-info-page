@@ -1,17 +1,23 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
+import { MdLightMode, MdDarkMode } from "react-icons/md";
 
 import "./style.css";
 
 import { useShadowingSession } from "../../hooks/useShadowingSession";
+import { useFirebaseAuth } from "../../hooks/useFirebaseAuth";
+import { useShadowingTheme } from "../../hooks/useShadowingTheme";
 import { shadowingVideos, validateVideo } from "../../data/shadowing";
 import { downloadVideoJson } from "../../lib/sessionIO";
+import { saveVideo, loadVideo } from "../../lib/videoStore";
 
 import { SessionChooser } from "../../components/shadowing/SessionChooser";
 import { SessionBar } from "../../components/shadowing/SessionBar";
 import { PracticeCard } from "../../components/shadowing/PracticeCard";
 import { AuthorView } from "../../components/shadowing/AuthorView";
 import { CloseSessionDialog } from "../../components/shadowing/author/CloseSessionDialog";
+import { AuthChip } from "../../components/shadowing/AuthChip";
+import { VideoGallery } from "../../components/shadowing/VideoGallery";
 
 /**
  * Trang shadowing: chỉ điều phối theo phiên.
@@ -21,7 +27,15 @@ import { CloseSessionDialog } from "../../components/shadowing/author/CloseSessi
  */
 export const Shadowing = () => {
   const session = useShadowingSession();
+  const auth = useFirebaseAuth();
+  const theme = useShadowingTheme();
   const [closing, setClosing] = useState(false);
+  const [browsing, setBrowsing] = useState(false);
+  const [saveStatus, setSaveStatus] = useState("idle"); // idle | saving | saved | error
+  const [saveError, setSaveError] = useState(null);
+
+  // Hai tính năng Firebase chỉ dùng được khi đã cấu hình VÀ đã đăng nhập
+  const firebaseReady = auth.isAvailable && auth.isSignedIn;
 
   const video = session.session ? session.session.video : null;
   const mode = session.session ? session.session.mode : null;
@@ -41,6 +55,39 @@ export const Shadowing = () => {
     const sample = shadowingVideos[0];
     if (sample) session.startPractice(sample, "Bài mẫu");
   }, [session]);
+
+  const handleSaveToFirebase = useCallback(async () => {
+    if (!video) return;
+    setSaveStatus("saving");
+    setSaveError(null);
+    try {
+      await saveVideo(video);
+      session.markExported(); // đã nằm ở nơi an toàn, không còn là thay đổi chưa lưu
+      setSaveStatus("saved");
+      window.setTimeout(() => setSaveStatus("idle"), 2500);
+    } catch (err) {
+      setSaveStatus("error");
+      setSaveError(err && err.message ? err.message : "Lưu lên Firebase thất bại.");
+    }
+  }, [video, session]);
+
+  const handlePickFromFirebase = useCallback(
+    async (videoId) => {
+      try {
+        const { video: loaded, problems } = await loadVideo(videoId);
+        if (!loaded) {
+          setSaveError((problems && problems[0]) || "Không mở được bài học này.");
+          return;
+        }
+        setBrowsing(false);
+        setSaveError(null);
+        session.startPractice(loaded, `Firebase · ${videoId}`);
+      } catch (err) {
+        setSaveError(err && err.message ? err.message : "Không mở được bài học này.");
+      }
+    },
+    [session]
+  );
 
   const handleCloseRequest = useCallback(() => setClosing(true), []);
 
@@ -72,7 +119,13 @@ export const Shadowing = () => {
     <HelmetProvider>
       <section
         id="shadowing"
-        className={`shadowing${session.status === "author" ? " is-author" : ""}`}
+        className={[
+          "shadowing",
+          session.status === "author" ? "is-author" : "",
+          theme.isLight ? "is-light" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
       >
         <Helmet>
           <meta charSet="utf-8" />
@@ -83,9 +136,20 @@ export const Shadowing = () => {
 
         <div className="sd-wrap">
           <header className="sd-head">
-            <h1 className="sd-head__title">
-              Shadowing <span lang="ja">日本語</span>
-            </h1>
+            <div className="sd-head__row">
+              <h1 className="sd-head__title">
+                Shadowing <span lang="ja">日本語</span>
+              </h1>
+              <button
+                type="button"
+                className="sd-theme-btn"
+                onClick={theme.toggle}
+                aria-label={theme.isLight ? "Chuyển sang nền tối" : "Chuyển sang nền sáng"}
+                title={theme.isLight ? "Chuyển sang nền tối" : "Chuyển sang nền sáng"}
+              >
+                {theme.isLight ? <MdDarkMode /> : <MdLightMode />}
+              </button>
+            </div>
             {video && (video.title || video.titleVi) && (
               <p className="sd-head__meta">
                 <span lang="ja">{video.title}</span>
@@ -95,14 +159,28 @@ export const Shadowing = () => {
             )}
           </header>
 
+          <AuthChip auth={auth} />
+
           {session.status === "booting" && <p className="sd-hint">Đang mở…</p>}
 
-          {session.status === "chooser" && (
+          {session.status === "chooser" && saveError && (
+            <p className="sd-action-error" role="alert">
+              {saveError}
+            </p>
+          )}
+
+          {session.status === "chooser" && browsing && (
+            <VideoGallery onPick={handlePickFromFirebase} onBack={() => setBrowsing(false)} />
+          )}
+
+          {session.status === "chooser" && !browsing && (
             <SessionChooser
               notice={session.notice}
               onStartAuthor={session.startAuthor}
               onImport={session.startPractice}
               onOpenSample={handleOpenSample}
+              onOpenFirebase={() => setBrowsing(true)}
+              firebaseReady={firebaseReady}
             />
           )}
 
@@ -117,6 +195,10 @@ export const Shadowing = () => {
                 onExport={handleExport}
                 onClose={handleCloseRequest}
                 onSwitchToAuthor={mode === "import" ? session.switchToAuthor : null}
+                onSaveToFirebase={handleSaveToFirebase}
+                firebaseReady={firebaseReady}
+                saveStatus={saveStatus}
+                saveError={saveError}
               />
 
               {session.notice && <p className="sd-notice">{session.notice}</p>}

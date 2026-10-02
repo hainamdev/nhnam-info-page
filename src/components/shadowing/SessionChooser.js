@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from "react";
-import { MdSmartDisplay, MdDataObject } from "react-icons/md";
+import { MdSmartDisplay, MdDataObject, MdCloudDownload } from "react-icons/md";
 
 import { parseYouTubeId } from "../../lib/youtubeUrl";
 import { readVideoFile } from "../../lib/sessionIO";
@@ -8,7 +8,7 @@ import { readVideoFile } from "../../lib/sessionIO";
  * Màn hình chọn khi chưa có phiên nào: nhập link YouTube để tự soạn, hoặc import
  * file JSON đã có. Bên dưới có lối tắt mở bài mẫu để thử ngay.
  */
-export const SessionChooser = ({ onStartAuthor, onImport, onOpenSample, notice }) => {
+export const SessionChooser = ({ onStartAuthor, onImport, onOpenSample, onOpenFirebase, firebaseReady, notice }) => {
   const [mode, setMode] = useState(null); // "youtube" | "json"
   const [urlInput, setUrlInput] = useState("");
   const [problems, setProblems] = useState([]);
@@ -92,6 +92,32 @@ export const SessionChooser = ({ onStartAuthor, onImport, onOpenSample, notice }
           <b>Import file JSON</b>
           <span className="sd-choice__desc">
             Mở bài đã soạn sẵn từ file .json trên máy (kéo thả vào đây cũng được)
+          </span>
+        </button>
+
+        <button
+          type="button"
+          className={`sd-choice${mode === "firebase" ? " is-active" : ""}`}
+          onClick={() => {
+            setMode("firebase");
+            onOpenFirebase();
+          }}
+          disabled={!firebaseReady}
+          aria-pressed={mode === "firebase"}
+          title={
+            firebaseReady
+              ? "Mở bài đã lưu trên Firebase"
+              : "Cần cấu hình Firebase và đăng nhập"
+          }
+        >
+          <span className="sd-choice__ico">
+            <MdCloudDownload />
+          </span>
+          <b>Mở từ Firebase</b>
+          <span className="sd-choice__desc">
+            {firebaseReady
+              ? "Chọn trong các bài bạn đã lưu trên Firebase"
+              : "Cần cấu hình Firebase và đăng nhập ở trên"}
           </span>
         </button>
       </div>

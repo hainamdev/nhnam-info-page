@@ -71,6 +71,19 @@ export async function signInWithGoogle() {
   return result.user;
 }
 
+export async function signOutUser() {
+  const app = await getFirebaseApp();
+  const { getAuth, signOut } = await import("firebase/auth");
+  await signOut(getAuth(app));
+}
+
+/** Theo dõi trạng thái đăng nhập. Trả về hàm huỷ đăng ký. */
+export async function watchAuth(callback) {
+  const app = await getFirebaseApp();
+  const { getAuth, onAuthStateChanged } = await import("firebase/auth");
+  return onAuthStateChanged(getAuth(app), callback);
+}
+
 export async function getCurrentUser() {
   if (!isFirebaseConfigured()) return null;
   const app = await getFirebaseApp();

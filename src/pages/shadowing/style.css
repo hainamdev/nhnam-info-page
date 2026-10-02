@@ -1,26 +1,149 @@
 /*
  * Shadowing 日本語
  *
- * Card dùng bảng màu tối RIÊNG, không lấy từ --bg-color/--text-color của site:
- * themetoggle hiện đang hard-code "light" và đã bị gỡ khỏi header, nên nếu phụ thuộc
- * vào data-theme thì card sẽ ra nền trắng, sai hẳn thiết kế.
+ * Trang này tự quản bảng màu RIÊNG, không lấy từ --bg-color/--text-color của site:
+ * themetoggle của site đang hard-code "light" và đã bị gỡ khỏi header, nên nếu phụ
+ * thuộc vào data-theme thì không đổi được gì.
+ *
+ * Mặc định là tối. Thêm class .is-light lên .shadowing để sang nền sáng — mọi màu
+ * bên dưới đều đi qua token nên chỉ cần ghi đè ở một chỗ.
  */
 
 .shadowing {
+  /* --- nền & đường kẻ --- */
+  --sd-page-bg: #0d0d0d;
   --sd-card-bg: #141414;
   --sd-card-border: #262626;
   --sd-surface: #1c1c1c;
   --sd-surface-hi: #2a2a2a;
+  --sd-sunken: #101010;
+  --sd-dialog-bg: #171717;
+  --sd-input-bg: #161616;
+  --sd-input-border: #2b2b2b;
+  --sd-line: #242424;
+  --sd-line-soft: #1d1d1d;
+  --sd-head-bg: #111111;
+  --sd-row-hi: #181818;
+  --sd-stage-bg: #0a0a0a;
+  --sd-dash: #3a3a3a;
+  --sd-track: #222222;
+  --sd-track-hi: #333333;
+  --sd-btn-border: #2e2e2e;
+  --sd-btn-border-hi: #454545;
+  --sd-code-bg: #1a1a1a;
+  --sd-code-text: #cccccc;
+  --sd-backdrop: rgba(0, 0, 0, 0.72);
+  --sd-audio-filter: invert(0.88) hue-rotate(180deg);
+
+  /* --- chữ --- */
   --sd-text: #f2f2f2;
   --sd-text-dim: #8a8a8a;
+  --sd-text-soft: #6e6e6e;
+  --sd-text-faint: #5c5c5c;
+  --sd-placeholder: #4e4e4e;
+
+  /* --- nhấn & trạng thái --- */
   --sd-accent: #cc0000;
+  --sd-accent-bg: #1b1515;
   --sd-rec: #ff3b30;
+
   --sd-ok: #4ade80;
+  --sd-ok-bg: #141a15;
+  --sd-ok-border: #27372c;
+  --sd-ok-text: #9fc4ab;
+
   --sd-bad: #ff6b6b;
+  --sd-bad-bg: #1e1414;
+  --sd-bad-border: #3a2020;
+  --sd-bad-text: #d8cccc;
+
   --sd-warn: #f0c040;
+  --sd-warn-bg: #1a1a16;
+  --sd-warn-border: #3a3420;
+  --sd-warn-text: #d8d2c0;
+  --sd-warn-text-dim: #8a8375;
+
+  --sd-info-bg: #16191e;
+  --sd-info-border: #27303a;
+  --sd-info-text: #9fb0c4;
+
   --sd-radius: 16px;
 
+  background: var(--sd-page-bg);
+  min-height: calc(100vh - 60px);
   padding: 24px 16px 80px;
+}
+
+/*
+ * Body của site là màu sáng và có padding-top 60px (chừa chỗ cho header cố định)
+ * cùng viền trái/phải 10px. Nếu chỉ sơn nền cho .shadowing thì ở nền tối sẽ lòi ra
+ * một dải sáng phía trên và hai mép — nên phủ hẳn một lớp nền kín viewport.
+ */
+.shadowing::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: var(--sd-page-bg);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Nền sáng. Chỉ ghi đè token — không đụng tới một luật bố cục nào. */
+.shadowing.is-light {
+  --sd-page-bg: #f4f4f5;
+  --sd-card-bg: #ffffff;
+  --sd-card-border: #e4e4e7;
+  --sd-surface: #f4f4f5;
+  --sd-surface-hi: #e8e8ea;
+  --sd-sunken: #fafafa;
+  --sd-dialog-bg: #ffffff;
+  --sd-input-bg: #ffffff;
+  --sd-input-border: #d4d4d8;
+  --sd-line: #e4e4e7;
+  --sd-line-soft: #efeff1;
+  --sd-head-bg: #f7f7f8;
+  --sd-row-hi: #f4f4f5;
+  /* Khung video vẫn tối: viền tối quanh video dễ nhìn hơn viền trắng */
+  --sd-stage-bg: #0a0a0a;
+  --sd-dash: #c4c4c8;
+  --sd-track: #e4e4e7;
+  --sd-track-hi: #c4c4c8;
+  --sd-btn-border: #d4d4d8;
+  --sd-btn-border-hi: #a1a1aa;
+  --sd-code-bg: #f4f4f5;
+  --sd-code-text: #3f3f46;
+  --sd-backdrop: rgba(24, 24, 27, 0.45);
+  --sd-audio-filter: none;
+
+  --sd-text: #18181b;
+  --sd-text-dim: #5f6368;
+  --sd-text-soft: #71717a;
+  --sd-text-faint: #8e8e93;
+  --sd-placeholder: #a1a1aa;
+
+  --sd-accent: #c21818;
+  --sd-accent-bg: #fdf0f0;
+  --sd-rec: #dc2626;
+
+  --sd-ok: #15803d;
+  --sd-ok-bg: #f0fdf4;
+  --sd-ok-border: #bbf7d0;
+  --sd-ok-text: #15803d;
+
+  --sd-bad: #dc2626;
+  --sd-bad-bg: #fef2f2;
+  --sd-bad-border: #fecaca;
+  --sd-bad-text: #991b1b;
+
+  --sd-warn: #b45309;
+  --sd-warn-bg: #fffbeb;
+  --sd-warn-border: #fde68a;
+  --sd-warn-text: #92400e;
+  --sd-warn-text-dim: #a16207;
+
+  --sd-info-bg: #eff6ff;
+  --sd-info-border: #bfdbfe;
+  --sd-info-text: #1d4ed8;
 }
 
 /* Thanh social icon là position:fixed ở left:30px -> chừa chỗ để không bị che */
@@ -36,7 +159,7 @@
 }
 
 .shadowing.is-author .sd-wrap {
-  max-width: 1000px;
+  max-width: 1180px;
 }
 
 .sr-only {
@@ -61,14 +184,14 @@
   font-family: "Montserrat", sans-serif;
   font-size: 20px;
   letter-spacing: 0.04em;
-  margin: 0 0 4px;
-  color: var(--text-color);
+  margin: 0;
+  color: var(--sd-text);
 }
 
 .sd-head__meta {
   margin: 0;
   font-size: 13px;
-  color: #8a8a8a;
+  color: var(--sd-text-dim);
 }
 
 /* ---------- card ---------- */
@@ -109,10 +232,10 @@
 .sd-stage {
   position: relative;
   aspect-ratio: 16 / 9;
-  border: 1px dashed #3a3a3a;
+  border: 1px dashed var(--sd-dash);
   border-radius: 6px;
   overflow: hidden;
-  background: #0a0a0a;
+  background: var(--sd-stage-bg);
   transition: border-color 0.25s;
 }
 
@@ -155,7 +278,7 @@
   letter-spacing: normal;
   font-size: 14px;
   pointer-events: auto;
-  background: rgba(10, 10, 10, 0.92);
+  background: var(--sd-stage-bg);
 }
 
 .sd-stage__overlay--error p {
@@ -210,14 +333,14 @@
 .sd-sub__vi {
   margin: 6px 0 0;
   font-size: 13px;
-  color: #a8a8a8;
+  color: var(--sd-text-dim);
 }
 
 .sd-sub__progress {
   height: 2px;
   max-width: 60%;
   margin-top: 16px;
-  background: #222;
+  background: var(--sd-track);
   border-radius: 2px;
   overflow: hidden;
 }
@@ -238,8 +361,8 @@
 
 .sd-chip {
   background: none;
-  border: 1px solid #2a2a2a;
-  color: #6e6e6e;
+  border: 1px solid var(--sd-surface-hi);
+  color: var(--sd-text-soft);
   border-radius: 999px;
   padding: 4px 12px;
   font-size: 11px;
@@ -254,13 +377,13 @@
 
 .sd-chip.is-on {
   color: var(--sd-text);
-  border-color: #4a4a4a;
+  border-color: var(--sd-btn-border-hi);
   background: var(--sd-surface);
 }
 
 .sd-divider {
   border: 0;
-  border-top: 1px solid #2b2b2b;
+  border-top: 1px solid var(--sd-input-border);
   max-width: 62%;
   margin: 22px 0 20px;
   opacity: 1;
@@ -343,7 +466,7 @@
   height: 3px;
   margin-top: 14px;
   max-width: 320px;
-  background: #222;
+  background: var(--sd-track);
   border-radius: 2px;
   overflow: hidden;
 }
@@ -384,7 +507,7 @@
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  border: 1px solid #242424;
+  border: 1px solid var(--sd-line);
   background: var(--sd-surface);
   color: var(--sd-text);
   display: grid;
@@ -424,15 +547,15 @@
 .sd-blk-meta {
   margin-left: 8px;
   font-variant-numeric: tabular-nums;
-  color: #5c5c5c;
+  color: var(--sd-text-faint);
 }
 
 .sd-audio {
   width: 100%;
   max-width: 420px;
   height: 36px;
-  /* Thanh audio mặc định của trình duyệt rất sáng, lọc lại cho hợp nền tối */
-  filter: invert(0.88) hue-rotate(180deg);
+  /* Thanh audio mặc định của trình duyệt rất sáng — ở nền tối phải đảo màu lại */
+  filter: var(--sd-audio-filter);
 }
 
 .sd-playback__actions {
@@ -444,7 +567,7 @@
 
 .sd-ghost-btn {
   background: none;
-  border: 1px solid #2e2e2e;
+  border: 1px solid var(--sd-btn-border);
   color: var(--sd-text-dim);
   border-radius: 8px;
   padding: 7px 14px;
@@ -456,7 +579,7 @@
 
 .sd-ghost-btn:hover {
   color: var(--sd-text);
-  border-color: #454545;
+  border-color: var(--sd-btn-border-hi);
 }
 
 /* ---------- kết quả STT ---------- */
@@ -576,7 +699,7 @@
 }
 
 .sd-ref b {
-  color: #b4b4b4;
+  color: var(--sd-text-dim);
   font-weight: 500;
 }
 
@@ -586,7 +709,7 @@
   margin-top: 14px;
   font-size: 11px;
   flex-wrap: wrap;
-  color: #5c5c5c;
+  color: var(--sd-text-faint);
 }
 
 .sd-legend .is-eq {
@@ -604,17 +727,17 @@
   margin-top: 16px;
   max-width: 520px;
   padding-left: 12px;
-  border-left: 2px solid #2a2a2a;
+  border-left: 2px solid var(--sd-surface-hi);
   font-size: 11.5px;
   line-height: 1.7;
-  color: #6e6e6e;
+  color: var(--sd-text-soft);
 }
 
 .sd-hint {
   margin: 0;
   font-size: 12px;
   line-height: 1.7;
-  color: #6e6e6e;
+  color: var(--sd-text-soft);
 }
 
 .sd-hint--tip {
@@ -622,10 +745,10 @@
 }
 
 .sd-hint code {
-  background: #1a1a1a;
+  background: var(--sd-code-bg);
   padding: 2px 6px;
   border-radius: 4px;
-  color: #aaa;
+  color: var(--sd-code-text);
   font-size: 11px;
 }
 
@@ -641,14 +764,14 @@
   align-items: flex-start;
   margin-top: 18px;
   padding: 14px 16px;
-  background: #1e1414;
-  border: 1px solid #3a2020;
+  background: var(--sd-bad-bg);
+  border: 1px solid var(--sd-bad-border);
   border-radius: 10px;
 }
 
 .sd-banner--warn {
-  background: #1a1a16;
-  border-color: #3a3420;
+  background: var(--sd-warn-bg);
+  border-color: var(--sd-warn-border);
 }
 
 .sd-banner__ico {
@@ -666,13 +789,13 @@
   margin: 0;
   font-size: 13px;
   line-height: 1.65;
-  color: #d8cccc;
+  color: var(--sd-bad-text);
 }
 
 .sd-banner__sub {
   margin-top: 4px !important;
   font-size: 12px !important;
-  color: #8a8a8a !important;
+  color: var(--sd-text-dim) !important;
 }
 
 .sd-banner .sd-ghost-btn {
@@ -684,10 +807,10 @@
 .sd-devtool {
   margin-top: 20px;
   padding: 16px 18px;
-  border: 1px dashed #333;
+  border: 1px dashed var(--sd-track-hi);
   border-radius: 10px;
-  background: #101010;
-  color: #9a9a9a;
+  background: var(--sd-sunken);
+  color: var(--sd-text-dim);
 }
 
 .sd-devtool__title {
@@ -695,7 +818,7 @@
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #5c5c5c;
+  color: var(--sd-text-faint);
 }
 
 .sd-devtool__row {
@@ -706,10 +829,10 @@
 }
 
 .sd-devtool code {
-  background: #1a1a1a;
+  background: var(--sd-code-bg);
   padding: 3px 8px;
   border-radius: 4px;
-  color: #ccc;
+  color: var(--sd-code-text);
   font-size: 12px;
 }
 
@@ -818,30 +941,30 @@
 .sd-notice {
   margin: 0 0 14px;
   padding: 9px 13px;
-  background: #16191e;
-  border: 1px solid #27303a;
+  background: var(--sd-info-bg);
+  border: 1px solid var(--sd-info-border);
   border-radius: 8px;
   font-size: 12.5px;
-  color: #9fb0c4;
+  color: var(--sd-info-text);
 }
 
 .sd-action-error {
   margin: 12px 0 0;
   padding: 10px 13px;
-  background: #1e1414;
-  border: 1px solid #3a2020;
+  background: var(--sd-bad-bg);
+  border: 1px solid var(--sd-bad-border);
   border-radius: 8px;
   font-size: 12.5px;
   line-height: 1.6;
-  color: #d8cccc;
+  color: var(--sd-bad-text);
 }
 
 .sd-primary-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #242424;
-  border: 1px solid #3a3a3a;
+  background: var(--sd-line);
+  border: 1px solid var(--sd-dash);
   color: var(--sd-text);
   border-radius: 8px;
   padding: 9px 16px;
@@ -852,8 +975,8 @@
 }
 
 .sd-primary-btn:hover:not(:disabled) {
-  background: #2f2f2f;
-  border-color: #4d4d4d;
+  background: var(--sd-surface-hi);
+  border-color: var(--sd-btn-border-hi);
 }
 
 .sd-primary-btn:disabled,
@@ -889,7 +1012,7 @@
   font-size: 13px;
   line-height: 1.8;
   color: var(--sd-text-dim);
-  border: 1px dashed #2e2e2e;
+  border: 1px dashed var(--sd-btn-border);
   border-radius: 10px;
 }
 
@@ -903,7 +1026,7 @@
 
 .sd-choose-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 14px;
 }
 
@@ -914,7 +1037,7 @@
   text-align: left;
   cursor: pointer;
   background: var(--sd-surface);
-  border: 1px solid #262626;
+  border: 1px solid var(--sd-card-border);
   border-radius: 12px;
   padding: 20px 18px;
   color: var(--sd-text);
@@ -923,14 +1046,14 @@
 }
 
 .sd-choice:hover {
-  background: #212121;
-  border-color: #3a3a3a;
+  background: var(--sd-surface-hi);
+  border-color: var(--sd-dash);
 }
 
 .sd-choice.is-active,
 .sd-choice.is-drop {
   border-color: var(--sd-accent);
-  background: #1b1515;
+  background: var(--sd-accent-bg);
 }
 
 .sd-choice__ico {
@@ -960,8 +1083,8 @@
 
 .sd-url-box {
   margin-top: 18px;
-  background: #101010;
-  border: 1px solid #242424;
+  background: var(--sd-sunken);
+  border: 1px solid var(--sd-line);
   border-radius: 10px;
   padding: 16px;
 }
@@ -992,7 +1115,7 @@
 }
 
 .sd-url-ok code {
-  background: #16211a;
+  background: var(--sd-ok-bg);
   padding: 2px 6px;
   border-radius: 4px;
   color: var(--sd-ok);
@@ -1012,8 +1135,8 @@
 
 .shadowing input[type="text"],
 .shadowing select {
-  background: #161616;
-  border: 1px solid #2b2b2b;
+  background: var(--sd-input-bg);
+  border: 1px solid var(--sd-input-border);
   border-radius: 8px;
   color: var(--sd-text);
   padding: 8px 11px;
@@ -1029,7 +1152,7 @@
 }
 
 .shadowing input[type="text"]::placeholder {
-  color: #4e4e4e;
+  color: var(--sd-placeholder);
 }
 
 /* ---------- thanh phiên ---------- */
@@ -1039,8 +1162,8 @@
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
-  background: #121212;
-  border: 1px solid #242424;
+  background: var(--sd-sunken);
+  border: 1px solid var(--sd-line);
   border-radius: 10px;
   padding: 11px 14px;
   margin-bottom: 14px;
@@ -1054,10 +1177,10 @@
 }
 
 .sd-sess-bar code {
-  background: #1a1a1a;
+  background: var(--sd-code-bg);
   padding: 2px 6px;
   border-radius: 4px;
-  color: #ccc;
+  color: var(--sd-code-text);
   font-size: 11px;
 }
 
@@ -1073,9 +1196,9 @@
   font-size: 10px;
   letter-spacing: 0.1em;
   font-weight: 700;
-  color: #9a9a9a;
-  background: #1e1e1e;
-  border: 1px solid #2e2e2e;
+  color: var(--sd-text-dim);
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-btn-border);
   border-radius: 5px;
   padding: 3px 7px;
   flex: none;
@@ -1083,8 +1206,8 @@
 
 .sd-sess-tag.is-author {
   color: var(--sd-accent);
-  border-color: #3a2020;
-  background: #1e1414;
+  border-color: var(--sd-bad-border);
+  background: var(--sd-bad-bg);
 }
 
 .sd-warn-dot {
@@ -1114,9 +1237,10 @@
   flex-wrap: wrap;
 }
 
+/* Soạn bài cần nhìn video rõ để chấm mốc -> rộng gấp đôi lúc đầu (340 -> 680) */
 .sd-author-stage {
-  flex: 0 0 340px;
-  max-width: 340px;
+  flex: 0 0 680px;
+  max-width: 680px;
 }
 
 .sd-author-prev {
@@ -1193,7 +1317,7 @@
 
 .sd-table-wrap {
   overflow-x: auto;
-  border: 1px solid #242424;
+  border: 1px solid var(--sd-line);
   border-radius: 10px;
 }
 
@@ -1210,15 +1334,15 @@
   font-size: 10.5px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #5c5c5c;
+  color: var(--sd-text-faint);
   padding: 10px;
-  border-bottom: 1px solid #242424;
-  background: #111;
+  border-bottom: 1px solid var(--sd-line);
+  background: var(--sd-head-bg);
 }
 
 .sd-ltable td {
   padding: 7px 8px;
-  border-bottom: 1px solid #1d1d1d;
+  border-bottom: 1px solid var(--sd-line-soft);
   color: var(--sd-text);
   vertical-align: middle;
 }
@@ -1228,15 +1352,15 @@
 }
 
 .sd-ltable tr.is-current {
-  background: #181818;
+  background: var(--sd-row-hi);
 }
 
 .sd-ltable tr.is-open td {
-  background: #15130f;
+  background: var(--sd-warn-bg);
 }
 
 .sd-ltable td:first-child {
-  color: #5c5c5c;
+  color: var(--sd-text-faint);
   text-align: center;
   width: 34px;
 }
@@ -1265,7 +1389,7 @@
 .sd-row-ops button {
   background: none;
   border: 0;
-  color: #5c5c5c;
+  color: var(--sd-text-faint);
   font-size: 17px;
   line-height: 1;
   padding: 5px;
@@ -1294,7 +1418,7 @@
 }
 
 .sd-tok-row td {
-  background: #101010 !important;
+  background: var(--sd-sunken) !important;
   padding: 0 !important;
 }
 
@@ -1359,8 +1483,8 @@
 }
 
 .sd-tok__cell.has-r input:last-of-type {
-  border-color: #2f3a33;
-  color: #8fb49f;
+  border-color: var(--sd-ok-border);
+  color: var(--sd-ok-text);
 }
 
 .sd-tok__cell-ops {
@@ -1372,7 +1496,7 @@
 .sd-tok__cell-ops button {
   background: none;
   border: 0;
-  color: #4e4e4e;
+  color: var(--sd-placeholder);
   font: inherit;
   font-size: 10px;
   cursor: pointer;
@@ -1394,14 +1518,14 @@
 }
 
 .sd-tok__check.is-ok {
-  background: #141a15;
-  border: 1px solid #27372c;
+  background: var(--sd-ok-bg);
+  border: 1px solid var(--sd-ok-border);
   color: var(--sd-ok);
 }
 
 .sd-tok__check.is-bad {
-  background: #1e1414;
-  border: 1px solid #3a2020;
+  background: var(--sd-bad-bg);
+  border: 1px solid var(--sd-bad-border);
   color: var(--sd-bad);
 }
 
@@ -1420,15 +1544,15 @@
 }
 
 .sd-validate.is-bad {
-  background: #1a1a16;
-  border: 1px solid #3a3420;
-  color: #d8d2c0;
+  background: var(--sd-warn-bg);
+  border: 1px solid var(--sd-warn-border);
+  color: var(--sd-warn-text);
 }
 
 .sd-validate.is-ok {
-  background: #141a15;
-  border: 1px solid #27372c;
-  color: #9fc4ab;
+  background: var(--sd-ok-bg);
+  border: 1px solid var(--sd-ok-border);
+  color: var(--sd-ok-text);
 }
 
 .sd-validate ul {
@@ -1440,7 +1564,7 @@
 .sd-validate__foot {
   margin: 9px 0 0;
   font-size: 11.5px;
-  color: #8a8375;
+  color: var(--sd-warn-text-dim);
 }
 
 /* ---------- kết quả tự điền ---------- */
@@ -1471,14 +1595,14 @@
   display: grid;
   place-items: center;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.72);
+  background: var(--sd-backdrop);
 }
 
 .sd-dialog {
   max-width: 460px;
   width: 100%;
-  background: #171717;
-  border: 1px solid #2e2e2e;
+  background: var(--sd-dialog-bg);
+  border: 1px solid var(--sd-btn-border);
   border-radius: 12px;
   padding: 22px;
   color: var(--sd-text);
@@ -1519,20 +1643,20 @@
 }
 
 .sd-lcard {
-  background: #161616;
-  border: 1px solid #242424;
+  background: var(--sd-input-bg);
+  border: 1px solid var(--sd-line);
   border-radius: 10px;
   padding: 12px 13px;
   margin-bottom: 10px;
 }
 
 .sd-lcard.is-current {
-  border-color: #3a3a3a;
+  border-color: var(--sd-dash);
 }
 
 .sd-lcard.is-open {
-  background: #15130f;
-  border-color: #3a3420;
+  background: var(--sd-warn-bg);
+  border-color: var(--sd-warn-border);
 }
 
 .sd-lcard__head {
@@ -1572,5 +1696,326 @@
   .sd-author-stage {
     flex: 1 1 100%;
     max-width: none;
+  }
+}
+
+/* ---------- đăng nhập cho tính năng cần Cloud Function ---------- */
+
+.sd-auth {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  background: var(--sd-info-bg);
+  border: 1px solid var(--sd-info-border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  font-size: 12.5px;
+  color: var(--sd-info-text);
+}
+
+.sd-auth svg {
+  font-size: 16px;
+  flex: none;
+}
+
+.sd-auth--on {
+  background: var(--sd-ok-bg);
+  border-color: var(--sd-ok-border);
+  color: var(--sd-ok-text);
+}
+
+.sd-auth__err {
+  flex-basis: 100%;
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--sd-bad);
+}
+
+/* ---------- đổi nền tối / sáng ---------- */
+
+.sd-head__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.sd-theme-btn {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 10px;
+  border: 1px solid var(--sd-btn-border);
+  background: var(--sd-surface);
+  color: var(--sd-text-dim);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.sd-theme-btn:hover {
+  color: var(--sd-text);
+  background: var(--sd-surface-hi);
+  border-color: var(--sd-btn-border-hi);
+}
+
+.sd-theme-btn:focus-visible {
+  outline: 2px solid var(--sd-accent);
+  outline-offset: 2px;
+}
+
+/* ---------- thanh tua thời gian ---------- */
+
+.sd-seek {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.sd-seek__t {
+  flex: none;
+  font-size: 12px;
+  color: var(--sd-text);
+  min-width: 38px;
+}
+
+.sd-seek__t--total {
+  color: var(--sd-text-dim);
+  text-align: right;
+}
+
+.sd-seek__track {
+  position: relative;
+  flex: 1;
+  height: 18px;
+  cursor: pointer;
+  touch-action: none;
+  display: flex;
+  align-items: center;
+}
+
+.sd-seek.is-disabled .sd-seek__track {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+/* Đường ray vẽ bằng ::before để vùng bấm cao 18px mà thanh vẫn mảnh */
+.sd-seek__track::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--sd-track);
+}
+
+.sd-seek__fill {
+  position: absolute;
+  left: 0;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--sd-accent);
+  pointer-events: none;
+}
+
+.sd-seek__knob {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border-radius: 50%;
+  background: var(--sd-text);
+  pointer-events: none;
+  transition: transform 0.12s;
+}
+
+.sd-seek__track:hover .sd-seek__knob,
+.sd-seek__knob.is-dragging {
+  transform: scale(1.25);
+}
+
+/* Mốc bắt đầu của từng câu — nhìn là biết chỗ nào chưa cắt */
+.sd-seek__mark {
+  position: absolute;
+  width: 2px;
+  height: 10px;
+  margin-left: -1px;
+  background: var(--sd-text-faint);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.sd-seek__track:focus-visible {
+  outline: 2px solid var(--sd-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- danh sách bài trên Firebase ---------- */
+
+.sd-gallery__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.sd-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 16px;
+}
+
+.sd-vcard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  text-align: left;
+  padding: 0;
+  overflow: hidden;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: 12px;
+  color: var(--sd-text);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.12s;
+}
+
+.sd-vcard:hover {
+  border-color: var(--sd-btn-border-hi);
+  transform: translateY(-2px);
+}
+
+.sd-vcard:focus-visible {
+  outline: 2px solid var(--sd-accent);
+  outline-offset: 2px;
+}
+
+.sd-vcard:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.sd-vcard__thumb {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  background: var(--sd-stage-bg);
+  overflow: hidden;
+}
+
+.sd-vcard__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.sd-vcard__dur {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+.sd-vcard__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 11px 12px 13px;
+}
+
+.sd-vcard__title {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.45;
+  font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  /* Tiêu đề dài thì cắt 2 dòng, để các thẻ cao bằng nhau */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.sd-vcard__sub {
+  font-size: 12px;
+  color: var(--sd-text-dim);
+}
+
+.sd-vcard__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 3px;
+  font-size: 11px;
+  color: var(--sd-text-faint);
+}
+
+.sd-vcard__level {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--sd-accent);
+  border: 1px solid var(--sd-accent);
+  border-radius: 4px;
+  padding: 0 5px;
+  line-height: 1.5;
+}
+
+.sd-vcard__del {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #e4e4e7;
+  font-size: 16px;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s;
+}
+
+.sd-vcard:hover .sd-vcard__del,
+.sd-vcard__del:focus-visible {
+  opacity: 1;
+}
+
+.sd-vcard__del:hover {
+  color: var(--sd-rec);
+}
+
+.sd-sess-err {
+  flex-basis: 100%;
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--sd-bad);
+}
+
+@media only screen and (max-width: 520px) {
+  .sd-gallery {
+    grid-template-columns: 1fr;
+  }
+  /* Màn cảm ứng không có hover -> luôn hiện nút xoá */
+  .sd-vcard__del {
+    opacity: 1;
   }
 }

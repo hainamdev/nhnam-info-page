@@ -12,10 +12,15 @@ service cloud.firestore {
           && request.auth.uid == 'REPLACE_WITH_YOUR_UID';
     }
 
-    // Bài học: nhập liệu qua Console hoặc script admin, client chỉ đọc
+    // Bài học: client tự soạn và tự lưu, nên được ghi bài của chính mình.
+    // Khác với shadowing_attempts bên dưới — ở đó điểm số do server tính nên
+    // client không được ghi, nếu không dữ liệu luyện tập mất hết ý nghĩa.
     match /shadowing_videos/{videoId} {
-      allow read:  if isOwner();
-      allow write: if false;
+      allow read: if isOwner();
+      allow create, update: if isOwner()
+                            && request.resource.data.ownerUid == request.auth.uid
+                            && videoId.matches("^[A-Za-z0-9_-]{11}$");
+      allow delete: if isOwner() && resource.data.ownerUid == request.auth.uid;
     }
 
     // Lịch sử luyện tập: CHỈ Cloud Function (Admin SDK, bỏ qua rules) được ghi.

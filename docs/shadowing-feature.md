@@ -35,11 +35,18 @@
 | **Phần B** — editor furigana | ✅ Xong & đã kiểm thực tế | kiểm `jp === tokens` trực tiếp |
 | **Phần B** — xuất JSON | ✅ Xong | round-trip xuất→nhập có test |
 | **Phần B** — tự điền bằng LLM | ⚙️ Code xong, **chưa bật** | Cần Blaze + `ANTHROPIC_API_KEY` + deploy `enrichShadowingLines` |
+| Đổi nền tối / sáng | ✅ Xong & đã kiểm thực tế | Nhớ lựa chọn trong localStorage |
+| Thanh tua thời gian video | ✅ Xong & đã kiểm thực tế | Tự dựng vì player chạy `controls: 0`; có vạch mốc từng câu |
+| Video to gấp đôi khi soạn bài | ✅ Xong | 340px → 680px |
+| Lưu bài lên Firebase | ⚙️ Code xong, **chưa bật** | Cần đăng nhập; rules cho phép chủ sở hữu ghi `shadowing_videos` |
+| Mở bài từ Firebase (lưới thẻ) | ⚙️ Code xong, **chưa bật** | Có test render; chạy thật cần Firestore |
 
 **Dữ liệu phụ đề hiện tại là MẪU, không khớp nội dung video thật.** Video `ZcKxZfyEFBc`
 thực tế là *"(N5 Level) Learn Japanese with Anime for Beginners!"* của kênh LevelupAnime,
 không phải bài về 日本の電車. Dùng panel "Công cụ dò mốc" ở chế độ dev để nhập mốc thật
 (xem [§12](#12-công-cụ-nhập-liệu-dev-only)).
+
+**Hướng dẫn bật từng bước:** [docs/shadowing-setup.md](./shadowing-setup.md)
 
 **Bật Speech-to-Text:** copy `.env.example` → `.env.local` và điền config Firebase; thay
 `REPLACE_WITH_YOUR_UID` trong `functions/index.js`, `firestore.rules`, `storage.rules`;

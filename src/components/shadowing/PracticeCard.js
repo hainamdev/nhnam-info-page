@@ -7,6 +7,7 @@ import { usePcmRecorder } from "../../hooks/usePcmRecorder";
 import { useTranscribe } from "../../hooks/useTranscribe";
 
 import { YouTubeStage } from "./YouTubeStage";
+import { SeekBar } from "./SeekBar";
 import { SubtitleTrack } from "./SubtitleTrack";
 import { ControlBar } from "./ControlBar";
 import { RecordingPlayback } from "./RecordingPlayback";
@@ -149,6 +150,14 @@ export const PracticeCard = ({ video, devTools }) => {
           ready={player.ready}
           error={player.error}
           videoUrl={video.url}
+        />
+
+        <SeekBar
+          currentTime={player.currentTime}
+          duration={player.duration}
+          onSeek={player.seekTo}
+          disabled={!player.ready}
+          lines={lines}
         />
 
         <SubtitleTrack

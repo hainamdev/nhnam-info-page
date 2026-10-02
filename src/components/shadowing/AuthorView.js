@@ -9,6 +9,7 @@ import { formatTime } from "../../lib/audio";
 import { addLineAtTime, closeOpenLineAtTime, findOpenLine, removeLine, updateLine } from "../../lib/lines";
 
 import { YouTubeStage } from "./YouTubeStage";
+import { SeekBar } from "./SeekBar";
 import { LessonMetaForm } from "./author/LessonMetaForm";
 import { LineTable } from "./author/LineTable";
 import { ValidationPanel } from "./author/ValidationPanel";
@@ -158,6 +159,14 @@ export const AuthorView = ({ video, onChangeVideo, onSetAutoFlags, autoFlags }) 
             error={player.error}
             videoUrl={video.url}
           />
+
+          <SeekBar
+            currentTime={player.currentTime}
+            duration={player.duration}
+            onSeek={player.seekTo}
+            disabled={!player.ready}
+            lines={lines}
+          />
         </div>
 
         <div className="sd-author-prev">
@@ -175,10 +184,6 @@ export const AuthorView = ({ video, onChangeVideo, onSetAutoFlags, autoFlags }) 
                   )
                 )
               : (active.line && active.line.jp) || "—"}
-          </p>
-
-          <p className="sd-time sd-time--author">
-            <b>{formatTime(player.currentTime)}</b> <span>/ {formatTime(player.duration)}</span>
           </p>
 
           <div className="sd-transport sd-transport--author">
