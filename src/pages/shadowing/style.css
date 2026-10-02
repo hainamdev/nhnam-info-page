@@ -1,0 +1,1576 @@
+/*
+ * Shadowing 日本語
+ *
+ * Card dùng bảng màu tối RIÊNG, không lấy từ --bg-color/--text-color của site:
+ * themetoggle hiện đang hard-code "light" và đã bị gỡ khỏi header, nên nếu phụ thuộc
+ * vào data-theme thì card sẽ ra nền trắng, sai hẳn thiết kế.
+ */
+
+.shadowing {
+  --sd-card-bg: #141414;
+  --sd-card-border: #262626;
+  --sd-surface: #1c1c1c;
+  --sd-surface-hi: #2a2a2a;
+  --sd-text: #f2f2f2;
+  --sd-text-dim: #8a8a8a;
+  --sd-accent: #cc0000;
+  --sd-rec: #ff3b30;
+  --sd-ok: #4ade80;
+  --sd-bad: #ff6b6b;
+  --sd-warn: #f0c040;
+  --sd-radius: 16px;
+
+  padding: 24px 16px 80px;
+}
+
+/* Thanh social icon là position:fixed ở left:30px -> chừa chỗ để không bị che */
+@media only screen and (min-width: 992px) {
+  .shadowing {
+    padding-left: 90px;
+  }
+}
+
+.shadowing .sd-wrap {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.shadowing.is-author .sd-wrap {
+  max-width: 1000px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- header ---------- */
+
+.sd-head {
+  margin-bottom: 18px;
+}
+
+.sd-head__title {
+  font-family: "Montserrat", sans-serif;
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  margin: 0 0 4px;
+  color: var(--text-color);
+}
+
+.sd-head__meta {
+  margin: 0;
+  font-size: 13px;
+  color: #8a8a8a;
+}
+
+/* ---------- card ---------- */
+
+.sd-card {
+  position: relative;
+  background: var(--sd-card-bg);
+  border: 1px solid var(--sd-card-border);
+  border-radius: var(--sd-radius);
+  padding: 28px;
+  color: var(--sd-text);
+}
+
+.sd-copy-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--sd-text-dim);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sd-copy-btn:hover {
+  background: var(--sd-surface);
+  color: var(--sd-text);
+}
+
+/* ---------- video ---------- */
+
+.sd-stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border: 1px dashed #3a3a3a;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #0a0a0a;
+  transition: border-color 0.25s;
+}
+
+/* Trình duyệt cũ không có aspect-ratio */
+@supports not (aspect-ratio: 16 / 9) {
+  .sd-stage {
+    height: 0;
+    padding-bottom: 56.25%;
+  }
+}
+
+.sd-stage.is-ready {
+  border-style: solid;
+  border-color: transparent;
+}
+
+.sd-stage__host,
+.sd-stage__host iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.sd-stage__overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  color: var(--sd-text-dim);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  pointer-events: none;
+}
+
+.sd-stage__overlay--error {
+  letter-spacing: normal;
+  font-size: 14px;
+  pointer-events: auto;
+  background: rgba(10, 10, 10, 0.92);
+}
+
+.sd-stage__overlay--error p {
+  margin: 0;
+}
+
+.sd-stage__overlay--error a {
+  color: var(--sd-text);
+  text-decoration: underline;
+}
+
+/* ---------- phụ đề + furigana ---------- */
+
+.sd-sub {
+  padding: 22px 2px 0;
+  transition: opacity 0.2s;
+}
+
+.sd-sub.is-dim {
+  opacity: 0.45;
+}
+
+.sd-sub__jp {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(20px, 2.4vw, 30px);
+  /* BẮT BUỘC >= 2 — thiếu là phần <rt> furigana bị cắt mất phía trên */
+  line-height: 2.1;
+  font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  color: var(--sd-text);
+}
+
+.sd-sub__jp ruby {
+  ruby-position: over;
+  -webkit-ruby-position: before; /* Safari */
+}
+
+.sd-sub__jp rt {
+  font-size: 0.45em;
+  font-weight: 400;
+  color: var(--sd-text-dim);
+  user-select: none;
+}
+
+.sd-sub__romaji {
+  margin: 6px 0 0;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  color: var(--sd-text-dim);
+}
+
+.sd-sub__vi {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #a8a8a8;
+}
+
+.sd-sub__progress {
+  height: 2px;
+  max-width: 60%;
+  margin-top: 16px;
+  background: #222;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.sd-sub__progress i {
+  display: block;
+  height: 100%;
+  background: var(--sd-accent);
+  border-radius: 2px;
+  transition: width 0.12s linear;
+}
+
+.sd-sub-toggles {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.sd-chip {
+  background: none;
+  border: 1px solid #2a2a2a;
+  color: #6e6e6e;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.sd-chip:hover {
+  color: var(--sd-text);
+}
+
+.sd-chip.is-on {
+  color: var(--sd-text);
+  border-color: #4a4a4a;
+  background: var(--sd-surface);
+}
+
+.sd-divider {
+  border: 0;
+  border-top: 1px solid #2b2b2b;
+  max-width: 62%;
+  margin: 22px 0 20px;
+  opacity: 1;
+}
+
+/* ---------- controls ---------- */
+
+.sd-controls__row {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  flex-wrap: wrap;
+}
+
+.sd-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--sd-text);
+  font: inherit;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+
+.sd-toggle:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sd-toggle__ico {
+  display: inline-flex;
+  color: var(--sd-text-dim);
+  font-size: 17px;
+}
+
+.sd-toggle.is-off {
+  color: var(--sd-text-dim);
+}
+
+.sd-toggle--rec.is-recording,
+.sd-toggle--rec.is-recording .sd-toggle__ico {
+  color: var(--sd-rec);
+}
+
+.sd-rec-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--sd-rec);
+  animation: sd-pulse 1s ease-in-out infinite;
+}
+
+@keyframes sd-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sd-rec-dot {
+    animation: none;
+  }
+}
+
+.sd-rec-time {
+  margin-left: 4px;
+  font-variant-numeric: tabular-nums;
+  color: var(--sd-rec);
+}
+
+.sd-level {
+  height: 3px;
+  margin-top: 14px;
+  max-width: 320px;
+  background: #222;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.sd-level i {
+  display: block;
+  height: 100%;
+  background: var(--sd-rec);
+  transform-origin: left center;
+  transition: transform 0.1s linear;
+}
+
+.sd-time {
+  margin: 20px 0 0;
+  padding-left: 52px;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: var(--sd-text);
+}
+
+.sd-time b {
+  font-weight: 500;
+}
+
+.sd-time span {
+  color: var(--sd-text-dim);
+}
+
+.sd-transport {
+  display: flex;
+  gap: 14px;
+  margin-top: 16px;
+  padding-left: 44px;
+}
+
+.sd-tbtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid #242424;
+  background: var(--sd-surface);
+  color: var(--sd-text);
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.sd-tbtn:hover:not(:disabled) {
+  background: var(--sd-surface-hi);
+}
+
+.sd-tbtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sd-tbtn:focus-visible,
+.sd-toggle:focus-visible,
+.sd-ghost-btn:focus-visible,
+.sd-chip:focus-visible,
+.sd-copy-btn:focus-visible {
+  outline: 2px solid var(--sd-accent);
+  outline-offset: 2px;
+}
+
+/* ---------- nghe lại ---------- */
+
+.sd-blk-title {
+  margin: 0 0 10px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--sd-text-dim);
+}
+
+.sd-blk-meta {
+  margin-left: 8px;
+  font-variant-numeric: tabular-nums;
+  color: #5c5c5c;
+}
+
+.sd-audio {
+  width: 100%;
+  max-width: 420px;
+  height: 36px;
+  /* Thanh audio mặc định của trình duyệt rất sáng, lọc lại cho hợp nền tối */
+  filter: invert(0.88) hue-rotate(180deg);
+}
+
+.sd-playback__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.sd-ghost-btn {
+  background: none;
+  border: 1px solid #2e2e2e;
+  color: var(--sd-text-dim);
+  border-radius: 8px;
+  padding: 7px 14px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.sd-ghost-btn:hover {
+  color: var(--sd-text);
+  border-color: #454545;
+}
+
+/* ---------- kết quả STT ---------- */
+
+.sd-stt {
+  margin-top: 22px;
+}
+
+.sd-stt__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  max-width: 520px;
+}
+
+.sd-stt__loading {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--sd-text-dim);
+  font-size: 13px;
+}
+
+.sd-dots i {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: var(--sd-text-dim);
+  animation: sd-blink 1.2s infinite;
+}
+
+.sd-dots i:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.sd-dots i:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes sd-blink {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sd-dots i {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
+.sd-score {
+  font-size: 19px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.sd-score small {
+  margin-left: 6px;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--sd-text-dim);
+}
+
+.sd-score.is-good {
+  color: var(--sd-ok);
+}
+.sd-score.is-mid {
+  color: var(--sd-warn);
+}
+.sd-score.is-bad {
+  color: var(--sd-bad);
+}
+
+.sd-hyp {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.8;
+  font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+}
+
+.sd-hyp .is-eq {
+  color: var(--sd-ok);
+}
+
+.sd-hyp .is-rp {
+  color: var(--sd-bad);
+  text-decoration: underline wavy var(--sd-bad);
+  text-underline-offset: 6px;
+}
+
+.sd-hyp .is-in {
+  color: var(--sd-bad);
+  opacity: 0.75;
+  text-decoration: line-through;
+}
+
+.sd-hyp .is-de {
+  color: var(--sd-text-dim);
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+.sd-ref {
+  margin: 14px 0 0;
+  font-size: 14px;
+  color: var(--sd-text-dim);
+  font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+}
+
+.sd-ref b {
+  color: #b4b4b4;
+  font-weight: 500;
+}
+
+.sd-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 14px;
+  font-size: 11px;
+  flex-wrap: wrap;
+  color: #5c5c5c;
+}
+
+.sd-legend .is-eq {
+  color: var(--sd-ok);
+}
+.sd-legend .is-rp,
+.sd-legend .is-in {
+  color: var(--sd-bad);
+}
+.sd-legend .is-de {
+  color: var(--sd-text-dim);
+}
+
+.sd-caveat {
+  margin-top: 16px;
+  max-width: 520px;
+  padding-left: 12px;
+  border-left: 2px solid #2a2a2a;
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: #6e6e6e;
+}
+
+.sd-hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #6e6e6e;
+}
+
+.sd-hint--tip {
+  margin-top: 18px;
+}
+
+.sd-hint code {
+  background: #1a1a1a;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #aaa;
+  font-size: 11px;
+}
+
+.sd-stt--hint {
+  padding-top: 4px;
+}
+
+/* ---------- banner lỗi ---------- */
+
+.sd-banner {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-top: 18px;
+  padding: 14px 16px;
+  background: #1e1414;
+  border: 1px solid #3a2020;
+  border-radius: 10px;
+}
+
+.sd-banner--warn {
+  background: #1a1a16;
+  border-color: #3a3420;
+}
+
+.sd-banner__ico {
+  flex: none;
+  margin-top: 1px;
+  font-size: 18px;
+  color: var(--sd-rec);
+}
+
+.sd-banner--warn .sd-banner__ico {
+  color: var(--sd-warn);
+}
+
+.sd-banner p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.65;
+  color: #d8cccc;
+}
+
+.sd-banner__sub {
+  margin-top: 4px !important;
+  font-size: 12px !important;
+  color: #8a8a8a !important;
+}
+
+.sd-banner .sd-ghost-btn {
+  margin-top: 10px;
+}
+
+/* ---------- panel dev ---------- */
+
+.sd-devtool {
+  margin-top: 20px;
+  padding: 16px 18px;
+  border: 1px dashed #333;
+  border-radius: 10px;
+  background: #101010;
+  color: #9a9a9a;
+}
+
+.sd-devtool__title {
+  margin: 0 0 12px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #5c5c5c;
+}
+
+.sd-devtool__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sd-devtool code {
+  background: #1a1a1a;
+  padding: 3px 8px;
+  border-radius: 4px;
+  color: #ccc;
+  font-size: 12px;
+}
+
+.sd-devtool__snippet {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.sd-devtool__snippet code {
+  flex: 1;
+  min-width: 260px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.sd-devtool__ok {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--sd-ok);
+}
+
+.sd-devtool__problems {
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--sd-warn);
+}
+
+.sd-devtool__problems ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  list-style: disc;
+}
+
+/* ---------- responsive ---------- */
+
+@media only screen and (max-width: 767px) {
+  .shadowing {
+    padding: 16px 12px 60px;
+  }
+
+  .sd-card {
+    padding: 20px 18px;
+  }
+
+  .sd-sub__jp {
+    font-size: 22px;
+    text-align: center;
+  }
+
+  .sd-sub__romaji,
+  .sd-sub__vi {
+    text-align: center;
+  }
+
+  .sd-sub__progress {
+    max-width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .sd-sub-toggles {
+    justify-content: center;
+  }
+
+  .sd-divider {
+    max-width: 100%;
+  }
+
+  .sd-controls__row {
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .sd-time {
+    padding-left: 0;
+    text-align: center;
+  }
+
+  .sd-transport {
+    padding-left: 0;
+    justify-content: center;
+    gap: 18px;
+  }
+
+  .sd-tbtn {
+    width: 48px;
+    height: 48px;
+  }
+
+  .sd-level {
+    max-width: none;
+  }
+}
+
+/* ================================================================
+   KHU VỰC TẠO DỮ LIỆU — màn chọn, thanh phiên, soạn bài
+   ================================================================ */
+
+.sd-card--wide {
+  max-width: none;
+}
+
+.sd-notice {
+  margin: 0 0 14px;
+  padding: 9px 13px;
+  background: #16191e;
+  border: 1px solid #27303a;
+  border-radius: 8px;
+  font-size: 12.5px;
+  color: #9fb0c4;
+}
+
+.sd-action-error {
+  margin: 12px 0 0;
+  padding: 10px 13px;
+  background: #1e1414;
+  border: 1px solid #3a2020;
+  border-radius: 8px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #d8cccc;
+}
+
+.sd-primary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #242424;
+  border: 1px solid #3a3a3a;
+  color: var(--sd-text);
+  border-radius: 8px;
+  padding: 9px 16px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sd-primary-btn:hover:not(:disabled) {
+  background: #2f2f2f;
+  border-color: #4d4d4d;
+}
+
+.sd-primary-btn:disabled,
+.sd-ghost-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sd-primary-btn.sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.sd-linklike {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--sd-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.sd-linklike:hover {
+  color: var(--sd-accent);
+}
+
+.sd-empty {
+  margin: 0;
+  padding: 26px 18px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--sd-text-dim);
+  border: 1px dashed #2e2e2e;
+  border-radius: 10px;
+}
+
+/* ---------- màn chọn ---------- */
+
+.sd-choose-title {
+  margin: 0 0 20px;
+  font-size: 15px;
+  color: var(--sd-text);
+}
+
+.sd-choose-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.sd-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  text-align: left;
+  cursor: pointer;
+  background: var(--sd-surface);
+  border: 1px solid #262626;
+  border-radius: 12px;
+  padding: 20px 18px;
+  color: var(--sd-text);
+  font: inherit;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.sd-choice:hover {
+  background: #212121;
+  border-color: #3a3a3a;
+}
+
+.sd-choice.is-active,
+.sd-choice.is-drop {
+  border-color: var(--sd-accent);
+  background: #1b1515;
+}
+
+.sd-choice__ico {
+  display: inline-flex;
+  font-size: 26px;
+  color: var(--sd-text-dim);
+}
+
+.sd-choice.is-active .sd-choice__ico {
+  color: var(--sd-accent);
+}
+
+.sd-choice b {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.sd-choice__desc {
+  font-size: 12px;
+  color: var(--sd-text-dim);
+  line-height: 1.65;
+}
+
+.sd-file-input {
+  display: none;
+}
+
+.sd-url-box {
+  margin-top: 18px;
+  background: #101010;
+  border: 1px solid #242424;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.sd-url-box label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--sd-text-dim);
+  margin-bottom: 8px;
+}
+
+.sd-url-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sd-url-row input {
+  flex: 1;
+  min-width: 220px;
+}
+
+.sd-url-ok {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--sd-ok);
+}
+
+.sd-url-ok code {
+  background: #16211a;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--sd-ok);
+}
+
+.sd-url-bad {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--sd-text-dim);
+}
+
+.sd-choose-foot {
+  margin-top: 20px;
+}
+
+/* ---------- ô nhập chung ---------- */
+
+.shadowing input[type="text"],
+.shadowing select {
+  background: #161616;
+  border: 1px solid #2b2b2b;
+  border-radius: 8px;
+  color: var(--sd-text);
+  padding: 8px 11px;
+  font: inherit;
+  font-size: 13px;
+  width: 100%;
+}
+
+.shadowing input[type="text"]:focus,
+.shadowing select:focus {
+  outline: 2px solid var(--sd-accent);
+  outline-offset: 1px;
+}
+
+.shadowing input[type="text"]::placeholder {
+  color: #4e4e4e;
+}
+
+/* ---------- thanh phiên ---------- */
+
+.sd-sess-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: #121212;
+  border: 1px solid #242424;
+  border-radius: 10px;
+  padding: 11px 14px;
+  margin-bottom: 14px;
+  font-size: 12.5px;
+  color: var(--sd-text-dim);
+}
+
+.sd-sess-bar b {
+  color: var(--sd-text);
+  font-weight: 500;
+}
+
+.sd-sess-bar code {
+  background: #1a1a1a;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #ccc;
+  font-size: 11px;
+}
+
+.sd-sess-info {
+  min-width: 0;
+}
+
+.sd-sess-spacer {
+  flex: 1;
+}
+
+.sd-sess-tag {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: #9a9a9a;
+  background: #1e1e1e;
+  border: 1px solid #2e2e2e;
+  border-radius: 5px;
+  padding: 3px 7px;
+  flex: none;
+}
+
+.sd-sess-tag.is-author {
+  color: var(--sd-accent);
+  border-color: #3a2020;
+  background: #1e1414;
+}
+
+.sd-warn-dot {
+  color: var(--sd-warn);
+  font-size: 11.5px;
+}
+
+.sd-warn-dot::before {
+  content: "\25CF  ";
+  font-size: 9px;
+  vertical-align: 1px;
+}
+
+.sd-warn-t {
+  color: var(--sd-warn);
+}
+
+.sd-ok-t {
+  color: var(--sd-ok);
+}
+
+/* ---------- soạn bài ---------- */
+
+.sd-author-top {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+
+.sd-author-stage {
+  flex: 0 0 340px;
+  max-width: 340px;
+}
+
+.sd-author-prev {
+  flex: 1;
+  min-width: 240px;
+}
+
+.sd-author-prev__jp {
+  margin: 0;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 2.1;
+  color: var(--sd-text);
+  font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+}
+
+.sd-author-prev__jp ruby {
+  ruby-position: over;
+  -webkit-ruby-position: before;
+}
+
+.sd-author-prev__jp rt {
+  font-size: 0.45em;
+  font-weight: 400;
+  color: var(--sd-text-dim);
+  user-select: none;
+}
+
+.sd-time--author {
+  padding-left: 0;
+  margin-top: 14px;
+}
+
+.sd-transport--author {
+  padding-left: 0;
+  margin-top: 12px;
+}
+
+.sd-divider--full {
+  max-width: 100%;
+}
+
+.sd-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.sd-meta-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--sd-text-dim);
+  letter-spacing: 0.04em;
+}
+
+.sd-lines-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 28px 0 12px;
+}
+
+.sd-lines-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ---------- bảng lines ---------- */
+
+.sd-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #242424;
+  border-radius: 10px;
+}
+
+.sd-ltable {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12.5px;
+  min-width: 860px;
+}
+
+.sd-ltable th {
+  text-align: left;
+  font-weight: 500;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #5c5c5c;
+  padding: 10px;
+  border-bottom: 1px solid #242424;
+  background: #111;
+}
+
+.sd-ltable td {
+  padding: 7px 8px;
+  border-bottom: 1px solid #1d1d1d;
+  color: var(--sd-text);
+  vertical-align: middle;
+}
+
+.sd-ltable tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.sd-ltable tr.is-current {
+  background: #181818;
+}
+
+.sd-ltable tr.is-open td {
+  background: #15130f;
+}
+
+.sd-ltable td:first-child {
+  color: #5c5c5c;
+  text-align: center;
+  width: 34px;
+}
+
+.sd-ltable .sd-num {
+  width: 68px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.sd-num.is-invalid {
+  border-color: var(--sd-bad) !important;
+}
+
+.sd-jp-input {
+  font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  font-size: 14px !important;
+}
+
+.sd-row-ops {
+  display: flex;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.sd-row-ops button {
+  background: none;
+  border: 0;
+  color: #5c5c5c;
+  font-size: 17px;
+  line-height: 1;
+  padding: 5px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+}
+
+.sd-row-ops button:hover:not(:disabled) {
+  color: var(--sd-text);
+  background: var(--sd-surface);
+}
+
+.sd-row-ops button.is-on {
+  color: var(--sd-text);
+  background: var(--sd-surface);
+}
+
+.sd-row-ops button.is-danger:hover {
+  color: var(--sd-bad);
+}
+
+.sd-row-ops button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.sd-tok-row td {
+  background: #101010 !important;
+  padding: 0 !important;
+}
+
+/* ---------- editor furigana ---------- */
+
+.sd-tok {
+  padding: 18px;
+}
+
+.sd-tok__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.sd-tok__head-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.sd-tok__preview {
+  margin: 14px 0 18px;
+  font-size: 24px;
+  line-height: 2.1;
+  font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+}
+
+.sd-tok__preview ruby {
+  ruby-position: over;
+  -webkit-ruby-position: before;
+}
+
+.sd-tok__preview rt {
+  font-size: 0.45em;
+  color: var(--sd-text-dim);
+  user-select: none;
+}
+
+.sd-tok__grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sd-tok__cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 112px;
+}
+
+.sd-tok__cell input {
+  text-align: center;
+  font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+}
+
+.sd-tok__cell input:last-of-type {
+  font-size: 11.5px !important;
+  color: var(--sd-text-dim);
+}
+
+.sd-tok__cell.has-r input:last-of-type {
+  border-color: #2f3a33;
+  color: #8fb49f;
+}
+
+.sd-tok__cell-ops {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.sd-tok__cell-ops button {
+  background: none;
+  border: 0;
+  color: #4e4e4e;
+  font: inherit;
+  font-size: 10px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.sd-tok__cell-ops button:hover {
+  color: var(--sd-text);
+  background: var(--sd-surface);
+}
+
+.sd-tok__check {
+  margin: 18px 0 0;
+  font-size: 13px;
+  padding: 10px 13px;
+  border-radius: 8px;
+  line-height: 1.6;
+}
+
+.sd-tok__check.is-ok {
+  background: #141a15;
+  border: 1px solid #27372c;
+  color: var(--sd-ok);
+}
+
+.sd-tok__check.is-bad {
+  background: #1e1414;
+  border: 1px solid #3a2020;
+  color: var(--sd-bad);
+}
+
+.sd-tok__check b {
+  font-weight: 500;
+}
+
+/* ---------- bảng kiểm ---------- */
+
+.sd-validate {
+  margin-top: 16px;
+  border-radius: 10px;
+  padding: 13px 16px;
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+
+.sd-validate.is-bad {
+  background: #1a1a16;
+  border: 1px solid #3a3420;
+  color: #d8d2c0;
+}
+
+.sd-validate.is-ok {
+  background: #141a15;
+  border: 1px solid #27372c;
+  color: #9fc4ab;
+}
+
+.sd-validate ul {
+  margin: 7px 0 0;
+  padding-left: 18px;
+  list-style: disc;
+}
+
+.sd-validate__foot {
+  margin: 9px 0 0;
+  font-size: 11.5px;
+  color: #8a8375;
+}
+
+/* ---------- kết quả tự điền ---------- */
+
+.sd-fill-res {
+  margin-top: 14px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--sd-text-dim);
+}
+
+.sd-fill-res p {
+  margin: 0 0 4px;
+}
+
+.sd-fill-res ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  list-style: disc;
+}
+
+/* ---------- hộp thoại ---------- */
+
+.sd-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.sd-dialog {
+  max-width: 460px;
+  width: 100%;
+  background: #171717;
+  border: 1px solid #2e2e2e;
+  border-radius: 12px;
+  padding: 22px;
+  color: var(--sd-text);
+}
+
+.sd-dialog__title {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.sd-dialog p {
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--sd-text-dim);
+}
+
+.sd-dialog b {
+  color: var(--sd-text);
+}
+
+.sd-dialog__meta {
+  font-size: 12px !important;
+}
+
+.sd-dialog__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+/* ---------- danh sách thẻ cho màn hẹp ---------- */
+
+.sd-lcards {
+  display: none;
+}
+
+.sd-lcard {
+  background: #161616;
+  border: 1px solid #242424;
+  border-radius: 10px;
+  padding: 12px 13px;
+  margin-bottom: 10px;
+}
+
+.sd-lcard.is-current {
+  border-color: #3a3a3a;
+}
+
+.sd-lcard.is-open {
+  background: #15130f;
+  border-color: #3a3420;
+}
+
+.sd-lcard__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.sd-lcard__time {
+  margin: 0 0 9px;
+  font-size: 11px;
+  color: var(--sd-text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.sd-lcard__time .is-open {
+  color: var(--sd-warn);
+}
+
+.sd-lcard input {
+  margin-bottom: 6px;
+}
+
+@media only screen and (max-width: 860px) {
+  .sd-table-wrap {
+    display: none;
+  }
+  .sd-lcards {
+    display: block;
+  }
+  .sd-choose-grid,
+  .sd-meta-grid {
+    grid-template-columns: 1fr;
+  }
+  .sd-author-stage {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+}

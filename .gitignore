@@ -21,3 +21,15 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# firebase functions
+/functions/node_modules
+/.firebase
+firebase-debug.log
+firestore-debug.log
+
+# npm cache nội bộ project (xem .npmrc)
+/.npm-cache
+
+# npm cache cuc bo (do .npmrc tro cache=./.npm-cache)
+/.npm-cache

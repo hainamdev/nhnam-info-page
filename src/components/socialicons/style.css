@@ -46,6 +46,24 @@
     transition: all .3s;
 }
 
+/* Icon shadowing là điều hướng nội bộ, không phải social link (caption dưới list
+   là "Follow Me") -> tách thành nhóm riêng bằng gạch ngăn mảnh */
+.stick_follow_icon ul li.sd_nav_item {
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--text-color);
+    opacity: .8;
+}
+
+.stick_follow_icon ul li.sd_nav_item:hover,
+.stick_follow_icon ul li.sd_nav_item a.is-active {
+    opacity: 1;
+}
+
+.stick_follow_icon ul li.sd_nav_item a.is-active svg {
+    fill: var(--text-color-3);
+}
+
 .stick_follow_icon p:after {
     top: 10px;
     right: -50px;
@@ -87,5 +105,12 @@
         display: inline;
         margin-bottom: 29px;
         margin-right: 10px;
+    }
+    /* Ở breakpoint này list nằm ngang -> đổi gạch ngăn sang bên phải */
+    .stick_follow_icon ul li.sd_nav_item {
+        border-bottom: none;
+        border-right: 1px solid var(--text-color);
+        padding: 0 12px 0 0;
+        margin-bottom: 29px;
     }
 }

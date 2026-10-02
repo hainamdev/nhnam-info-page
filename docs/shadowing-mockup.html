@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Shadowing 日本語 — Mockup v3</title>
+<style>
+  :root{
+    --sd-page-bg:#000;
+    --sd-card-bg:#141414;
+    --sd-card-border:#262626;
+    --sd-surface:#1c1c1c;
+    --sd-surface-hi:#2a2a2a;
+    --sd-text:#f2f2f2;
+    --sd-text-dim:#8a8a8a;
+    --sd-accent:#cc0000;
+    --sd-rec:#ff3b30;
+    --sd-ok:#4ade80;
+    --sd-bad:#ff6b6b;
+    --sd-radius:16px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:40px 24px 80px;
+    background:var(--sd-page-bg); color:var(--sd-text);
+    font-family:Raleway,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  .wrap{max-width:880px;margin:0 auto}
+  h1{font-family:Montserrat,sans-serif;font-size:22px;letter-spacing:.04em;margin:0 0 6px}
+  .lede{color:var(--sd-text-dim);font-size:14px;margin:0 0 10px;line-height:1.7}
+  .lede code{background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#ccc;font-size:12px}
+  .decided{
+    display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 8px;
+  }
+  .chip{
+    font-size:11px;letter-spacing:.03em;color:#cfcfcf;background:#161616;
+    border:1px solid #282828;border-radius:999px;padding:5px 11px;
+  }
+  .chip b{color:var(--sd-accent);font-weight:600}
+  .state-label{
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--sd-text-dim);margin:46px 0 12px;display:flex;gap:10px;align-items:center;
+  }
+  .state-label::after{content:"";flex:1;height:1px;background:#1f1f1f}
+
+  /* ---------- card ---------- */
+  .card{
+    position:relative;background:var(--sd-card-bg);border:1px solid var(--sd-card-border);
+    border-radius:var(--sd-radius);padding:28px;max-width:760px;
+  }
+  .copy-btn{
+    position:absolute;top:18px;right:18px;width:30px;height:30px;border:0;border-radius:8px;
+    background:transparent;color:var(--sd-text-dim);cursor:pointer;display:grid;place-items:center;
+  }
+  .copy-btn:hover{background:var(--sd-surface);color:var(--sd-text)}
+
+  .stage{
+    aspect-ratio:16/9;border:1px dashed #3a3a3a;border-radius:6px;
+    display:grid;place-items:center;color:var(--sd-text-dim);
+    font-size:12px;letter-spacing:.22em;margin:14px 0 6px;
+  }
+  .stage.live{border-style:solid;border-color:#222;background:#0a0a0a;color:#555}
+  .stage .play-ghost{font-size:30px;color:#3a3a3a}
+
+  /* ---------- subtitle + furigana ---------- */
+  .sub{padding:24px 4px 4px}
+  .sd-jp{
+    margin:0;font-weight:500;
+    font-size:clamp(20px,2.4vw,30px);
+    line-height:2.1;                 /* chừa chỗ cho rt — thiếu là bị cắt */
+    font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  }
+  .sd-jp ruby{ruby-position:over;-webkit-ruby-position:before}
+  .sd-jp rt{font-size:.45em;font-weight:400;color:var(--sd-text-dim);user-select:none}
+  .sub.dim .sd-jp{opacity:.45}
+
+  .divider{border:0;border-top:1px solid #2b2b2b;margin:22px 0 20px;max-width:62%}
+
+  /* ---------- controls ---------- */
+  .controls{display:flex;align-items:center;gap:36px;flex-wrap:wrap}
+  .toggle{
+    display:inline-flex;align-items:center;gap:9px;background:none;border:0;padding:0;
+    color:var(--sd-text);font:inherit;font-size:13px;letter-spacing:.06em;cursor:pointer;
+  }
+  .toggle .ico{color:var(--sd-text-dim);display:inline-flex}
+  .toggle.off{color:var(--sd-text-dim)}
+  .toggle.rec-on{color:var(--sd-rec)}
+  .rec-dot{width:9px;height:9px;border-radius:50%;background:var(--sd-rec);animation:pulse 1s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  @media (prefers-reduced-motion:reduce){.rec-dot{animation:none}}
+  .rec-time{font-variant-numeric:tabular-nums;color:var(--sd-rec);font-size:13px}
+
+  .time{
+    margin:20px 0 0;padding-left:52px;color:var(--sd-text);font-size:13px;
+    font-variant-numeric:tabular-nums;letter-spacing:.08em;
+  }
+  .time b{font-weight:500}
+  .time span{color:var(--sd-text-dim)}
+  .time em{font-style:normal;color:#5c5c5c;font-size:11px;letter-spacing:.04em;margin-left:10px}
+
+  .transport{display:flex;gap:14px;margin-top:16px;padding-left:44px}
+  .tbtn{
+    position:relative;width:44px;height:44px;border-radius:10px;border:1px solid #242424;
+    background:var(--sd-surface);color:var(--sd-text);display:grid;place-items:center;
+    cursor:pointer;transition:background .15s;
+  }
+  .tbtn:hover{background:var(--sd-surface-hi)}
+  .tbtn:focus-visible{outline:2px solid var(--sd-accent);outline-offset:2px}
+  .tbtn .n{position:absolute;font-size:9px;font-weight:700;letter-spacing:0;color:var(--sd-text-dim)}
+
+  .level{display:flex;gap:2px;align-items:flex-end;height:22px;margin-top:20px;padding-left:4px}
+  .level i{width:3px;background:var(--sd-rec);opacity:.75;border-radius:1px}
+
+  /* ---------- playback + STT ---------- */
+  .blk-title{font-size:12px;color:var(--sd-text-dim);margin:0 0 10px;letter-spacing:.04em}
+  .player{
+    display:flex;align-items:center;gap:14px;background:var(--sd-surface);
+    border:1px solid #242424;border-radius:10px;padding:10px 14px;max-width:420px;
+  }
+  .player .bar{flex:1;height:3px;background:#333;border-radius:2px;position:relative}
+  .player .bar i{position:absolute;inset:0 60% 0 0;background:var(--sd-text-dim);border-radius:2px}
+  .player .bar b{position:absolute;left:40%;top:-3px;width:9px;height:9px;border-radius:50%;background:var(--sd-text)}
+  .player .t{font-size:12px;color:var(--sd-text-dim);font-variant-numeric:tabular-nums}
+
+  .stt-loading{display:flex;align-items:center;gap:11px;margin-top:20px;color:var(--sd-text-dim);font-size:13px}
+  .dots i{
+    display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--sd-text-dim);
+    margin-right:4px;animation:blink 1.2s infinite;
+  }
+  .dots i:nth-child(2){animation-delay:.2s}
+  .dots i:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+
+  .result{margin-top:22px}
+  .result-head{display:flex;align-items:baseline;justify-content:space-between;max-width:520px;margin-bottom:10px}
+  .result-head .sc{font-size:19px;font-weight:600;color:var(--sd-ok);font-variant-numeric:tabular-nums}
+  .result-head .sc small{font-size:11px;color:var(--sd-text-dim);font-weight:400;margin-left:6px}
+  .hyp{
+    font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    font-size:24px;line-height:1.8;margin:0;
+  }
+  .hyp .eq{color:var(--sd-ok)}
+  .hyp .rp{color:var(--sd-bad);text-decoration:underline wavy var(--sd-bad);text-underline-offset:6px}
+  .hyp .de{color:var(--sd-text-dim);text-decoration:line-through}
+  .ref{
+    margin:14px 0 0;font-size:14px;color:var(--sd-text-dim);
+    font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  }
+  .ref b{color:#b4b4b4;font-weight:500}
+  .legend{display:flex;gap:16px;margin-top:14px;font-size:11px;color:#5c5c5c;flex-wrap:wrap}
+  .legend s{color:var(--sd-text-dim)}
+  .caveat{
+    margin-top:16px;font-size:11.5px;color:#6e6e6e;line-height:1.7;
+    border-left:2px solid #2a2a2a;padding-left:12px;max-width:520px;
+  }
+  .pb-actions{display:flex;gap:10px;margin-top:18px}
+  .ghost-btn{
+    background:none;border:1px solid #2e2e2e;color:var(--sd-text-dim);border-radius:8px;
+    padding:7px 14px;font:inherit;font-size:12px;cursor:pointer;
+  }
+  .ghost-btn:hover{color:var(--sd-text);border-color:#454545}
+
+  /* ---------- banner ---------- */
+  .banner{
+    display:flex;gap:14px;align-items:flex-start;background:#1e1414;border:1px solid #3a2020;
+    border-radius:10px;padding:14px 16px;
+  }
+  .banner .bi{color:var(--sd-rec);flex:none;margin-top:1px}
+  .banner p{margin:0;font-size:13px;line-height:1.65;color:#d8cccc}
+  .banner .ghost-btn{margin-top:10px}
+
+  /* ---------- social rail ---------- */
+  .rail-demo{display:flex;gap:40px;align-items:flex-start;flex-wrap:wrap;margin-top:12px}
+  .rail{background:#111;border:1px solid #1e1e1e;border-radius:12px;padding:18px 14px;width:74px}
+  .rail ul{list-style:none;margin:0;padding:0;text-align:center}
+  .rail li{margin-bottom:12px;color:#e8e8e8;display:flex;justify-content:center}
+  .rail li.sd-nav{padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid #3a3a3a}
+  .rail li.sd-nav svg{color:var(--sd-accent)}
+  .rail .cap{margin-top:14px;font-size:10px;color:var(--sd-text-dim);text-align:center}
+  .note{font-size:13px;color:var(--sd-text-dim);line-height:1.8;max-width:430px}
+  .note code{background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#ccc;font-size:12px}
+
+  /* ---------- mobile frame ---------- */
+  .phone{
+    width:320px;border:1px solid #242424;border-radius:22px;background:var(--sd-card-bg);
+    padding:18px 16px 22px;
+  }
+  .phone .stage{margin:10px 0 4px}
+  .phone .sub{padding:14px 0 0;text-align:center}
+  .phone .sd-jp{font-size:22px}
+  .phone .divider{max-width:100%;margin:16px 0}
+  .phone .controls{justify-content:space-between;gap:12px}
+  .phone .time{padding:0;text-align:center;margin-top:16px}
+  .phone .transport{padding:0;justify-content:center;gap:18px;margin-top:14px}
+  .phone .tbtn{width:48px;height:48px}
+
+  @media (max-width:600px){
+    body{padding:28px 16px 60px}
+    .card{padding:20px}
+    .time,.transport{padding-left:0;text-align:center}
+    .transport{justify-content:center}
+  }
+
+  /* ============ PHẦN B — khu vực tạo dữ liệu ============ */
+
+  /* bí danh cho các lớp dùng chung ở phần B */
+  .sd-blk-title{font-size:12px;color:var(--sd-text-dim);margin:0 0 10px;letter-spacing:.04em}
+  .sd-ghost-btn{
+    background:none;border:1px solid #2e2e2e;color:var(--sd-text-dim);border-radius:8px;
+    padding:7px 14px;font:inherit;font-size:12px;cursor:pointer;white-space:nowrap;
+  }
+  .sd-ghost-btn:hover{color:var(--sd-text);border-color:#454545}
+  .sd-hint{margin:0;font-size:12px;line-height:1.7;color:#6e6e6e}
+  .sd-caveat{
+    margin-top:16px;font-size:11.5px;color:#6e6e6e;line-height:1.75;
+    border-left:2px solid #2a2a2a;padding-left:12px;max-width:560px;
+  }
+  .sd-stt__loading{display:flex;align-items:center;gap:11px;color:var(--sd-text-dim);font-size:13px}
+  .sd-dots i{
+    display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--sd-text-dim);
+    margin-right:4px;animation:blink 1.2s infinite;
+  }
+  .sd-dots i:nth-child(2){animation-delay:.2s}
+  .sd-dots i:nth-child(3){animation-delay:.4s}
+
+  .partb-head{margin:72px 0 4px;padding-top:30px;border-top:1px solid #1f1f1f}
+  .partb-head h2{font-family:Montserrat,sans-serif;font-size:19px;letter-spacing:.03em;margin:0 0 8px}
+  .partb-head p{color:var(--sd-text-dim);font-size:13.5px;line-height:1.75;margin:0;max-width:640px}
+  .partb-head code{background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#ccc;font-size:12px}
+
+  .card.wide{max-width:900px}
+
+  .primary-btn{
+    background:#242424;border:1px solid #3a3a3a;color:var(--sd-text);border-radius:8px;
+    padding:9px 16px;font:inherit;font-size:13px;cursor:pointer;white-space:nowrap;
+  }
+  .primary-btn:hover{background:#2f2f2f;border-color:#4d4d4d}
+  .primary-btn.sm{padding:6px 12px;font-size:12px}
+
+  /* ---- chooser ---- */
+  .choose-title{font-size:15px;margin:0 0 20px;color:var(--sd-text)}
+  .choose-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .choice{
+    display:flex;flex-direction:column;gap:9px;text-align:left;cursor:pointer;
+    background:var(--sd-surface);border:1px solid #262626;border-radius:12px;
+    padding:20px 18px;color:var(--sd-text);font:inherit;transition:border-color .15s,background .15s;
+  }
+  .choice:hover{background:#212121;border-color:#3a3a3a}
+  .choice.is-active{border-color:var(--sd-accent);background:#1b1515}
+  .choice__ico{color:var(--sd-text-dim);display:inline-flex}
+  .choice.is-active .choice__ico{color:var(--sd-accent)}
+  .choice b{font-size:14px;font-weight:600}
+  .choice__desc{font-size:12px;color:var(--sd-text-dim);line-height:1.65}
+
+  .url-box{margin-top:18px;background:#101010;border:1px solid #242424;border-radius:10px;padding:16px}
+  .url-box label{display:block;font-size:11px;letter-spacing:.06em;color:var(--sd-text-dim);margin-bottom:8px}
+  .url-row{display:flex;gap:10px;flex-wrap:wrap}
+  .url-row input{flex:1;min-width:220px}
+  .url-ok{margin:10px 0 0;font-size:12px;color:var(--sd-ok)}
+  .url-ok code{background:#16211a;padding:2px 6px;border-radius:4px;color:var(--sd-ok)}
+
+  input[type=text]{
+    background:#161616;border:1px solid #2b2b2b;border-radius:8px;color:var(--sd-text);
+    padding:9px 11px;font:inherit;font-size:13px;
+  }
+  input[type=text]:focus{outline:2px solid var(--sd-accent);outline-offset:1px}
+
+  /* ---- session bar ---- */
+  .sess-bar{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;max-width:900px;
+    background:#121212;border:1px solid #242424;border-radius:10px;
+    padding:11px 14px;font-size:12.5px;color:var(--sd-text-dim);
+  }
+  .sess-bar.sm{padding:8px 10px;font-size:11px}
+  .sess-bar b{color:var(--sd-text);font-weight:500}
+  .sess-bar code{background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#ccc;font-size:11px}
+  .sess-spacer{flex:1}
+  .sess-tag{
+    font-size:10px;letter-spacing:.1em;font-weight:700;color:#9a9a9a;
+    background:#1e1e1e;border:1px solid #2e2e2e;border-radius:5px;padding:3px 7px;
+  }
+  .sess-tag.is-author{color:var(--sd-accent);border-color:#3a2020;background:#1e1414}
+  .warn-dot{color:var(--sd-warn);font-size:11.5px}
+  .warn-dot::before{content:"● ";font-size:9px;vertical-align:1px}
+
+  /* ---- author ---- */
+  .author-top{display:flex;gap:20px;flex-wrap:wrap}
+  .stage.mini{flex:0 0 300px;max-width:300px;margin:0}
+  .author-prev{flex:1;min-width:230px}
+
+  .meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:6px}
+  .meta-grid label{display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--sd-text-dim);letter-spacing:.04em}
+
+  .lines-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:26px 0 12px}
+  .lines-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+  .table-wrap{overflow-x:auto;border:1px solid #242424;border-radius:10px}
+  .ltable{border-collapse:collapse;width:100%;font-size:12.5px;min-width:720px}
+  .ltable th{
+    text-align:left;font-weight:500;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:#5c5c5c;padding:10px 12px;border-bottom:1px solid #242424;background:#111;
+  }
+  .ltable td{padding:11px 12px;border-bottom:1px solid #1d1d1d;color:var(--sd-text);vertical-align:top}
+  .ltable tr:last-child td{border-bottom:0}
+  .ltable td.auto{color:#7f8f84;font-style:italic}
+  .ltable td.manual{color:var(--sd-text)}
+  .ltable td.open{color:var(--sd-warn)}
+  .ltable td.editing{outline:1px solid var(--sd-accent);outline-offset:-3px;border-radius:4px}
+  .ltable tr.is-current{background:#181818}
+  .ltable tr.is-open td{background:#15130f}
+  .ltable .ops{color:#5c5c5c;letter-spacing:3px;white-space:nowrap;cursor:pointer}
+
+  .legend-note{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0 0;font-size:11px;color:#5c5c5c;align-items:center}
+  .sw{display:inline-block;width:9px;height:9px;border-radius:2px;vertical-align:-1px;margin-right:5px}
+  .sw.auto{background:#7f8f84}
+  .sw.manual{background:var(--sd-text)}
+  .sw.open{background:var(--sd-warn)}
+
+  .validate{margin-top:16px;border-radius:10px;padding:13px 16px;font-size:12.5px;line-height:1.7}
+  .validate.bad{background:#1a1a16;border:1px solid #3a3420;color:#d8d2c0}
+  .validate ul{margin:7px 0 0;padding-left:18px}
+  .validate code{background:#222018;padding:1px 5px;border-radius:3px;font-size:11.5px}
+  .validate__foot{margin:9px 0 0;font-size:11.5px;color:#8a8375}
+
+  /* ---- token editor ---- */
+  .tok-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .tok-grid{display:flex;gap:10px;flex-wrap:wrap}
+  .tok{display:flex;flex-direction:column;gap:5px}
+  .tok input{
+    width:104px;text-align:center;background:#161616;border:1px solid #2b2b2b;
+    border-radius:7px;color:var(--sd-text);padding:8px 6px;font:inherit;font-size:14px;
+    font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  }
+  .tok input:last-child{font-size:11.5px;color:var(--sd-text-dim);padding:6px}
+  .tok.has-r input:first-child{border-color:#3d3d3d}
+  .tok.has-r input:last-child{border-color:#2f3a33;color:#8fb49f}
+
+  .tok-check{margin:18px 0 0;font-size:13px;padding:10px 13px;border-radius:8px}
+  .tok-check.ok{background:#141a15;border:1px solid #27372c;color:var(--sd-ok)}
+  .tok-check.bad{background:#1e1414;border:1px solid #3a2020;color:var(--sd-bad)}
+  .tok-check b{font-weight:500}
+
+  /* ---- auto fill ---- */
+  .fill-res{font-size:13px;line-height:1.8;color:var(--sd-text-dim)}
+  .fill-res p{margin:0 0 4px}
+  .fill-res ul{margin:6px 0 0;padding-left:18px}
+  .fill-res code{background:#1a1a1a;padding:1px 5px;border-radius:3px;color:#ccc;font-size:11.5px}
+  .ok-t{color:var(--sd-ok)}
+  .warn-t{color:var(--sd-warn)}
+
+  /* ---- dialog ---- */
+  .dialog{max-width:460px;background:#171717;border:1px solid #2e2e2e;border-radius:12px;padding:20px}
+  .dialog__title{margin:0 0 12px;font-size:15px;font-weight:600;color:var(--sd-text)}
+  .dialog p{margin:0 0 10px;font-size:13px;line-height:1.7;color:var(--sd-text-dim)}
+  .dialog b{color:var(--sd-text)}
+  .dialog__meta{font-size:12px !important}
+
+  /* ---- mobile line cards ---- */
+  .lcard{background:#161616;border:1px solid #242424;border-radius:10px;padding:12px 13px;margin-bottom:10px}
+  .lcard.is-open{background:#15130f;border-color:#3a3420}
+  .lcard__head{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--sd-text)}
+  .lcard__time{margin:6px 0 8px;font-size:11px;color:var(--sd-text-dim);font-variant-numeric:tabular-nums}
+  .lcard__time .open{color:var(--sd-warn)}
+  .lcard__jp{margin:0;font-size:15px;font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif}
+  .lcard__sub{margin:5px 0 0;font-size:11.5px}
+  .lcard__sub.auto{color:#7f8f84;font-style:italic}
+  .lcard__sub.manual{color:var(--sd-text-dim)}
+
+  @media (max-width:760px){
+    .choose-grid,.meta-grid{grid-template-columns:1fr}
+    .stage.mini{flex:1 1 100%;max-width:none}
+  }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Shadowing 日本語 — UI Mockup v3</h1>
+  <p class="lede">
+    Bản dựng tĩnh cho <code>/shadowing</code>. Không có logic thật — chỉ thể hiện bố cục, màu
+    và các trạng thái. Khối 1–7 là tính năng luyện tập (đã triển khai); khối 8–14 là khu vực tạo dữ liệu (mới thiết kế). Tài liệu đầy đủ: <code>docs/shadowing-feature.md</code>
+  </p>
+  <div class="decided">
+    <span class="chip"><b>Q1</b> &nbsp;2 mũi tên = tua ±5 giây</span>
+    <span class="chip"><b>Q2</b> &nbsp;đồng hồ = tiến độ cả video</span>
+    <span class="chip"><b>Q3</b> &nbsp;không tải xuống → Google STT</span>
+    <span class="chip"><b>Q4</b> &nbsp;kanji có furigana</span>
+    <span class="chip"><b>Q5</b> &nbsp;noindex</span>
+  </div>
+
+  <!-- ============ 1. IDLE ============ -->
+  <div class="state-label">1 · Idle — vừa vào trang</div>
+  <div class="card">
+    <button class="copy-btn" title="Copy phụ đề" aria-label="Copy phụ đề">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>
+      </svg>
+    </button>
+
+    <div class="stage">VIDEO</div>
+
+    <div class="sub">
+      <p class="sd-jp" lang="ja">
+        <ruby>日本<rt aria-hidden="true">にほん</rt></ruby>の<ruby>電車<rt aria-hidden="true">でんしゃ</rt></ruby>は
+      </p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="controls">
+      <button class="toggle">
+        <span class="ico">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M19.1 4.9a10 10 0 0 1 0 14.2M15.5 8.5a5 5 0 0 1 0 7"/>
+          </svg>
+        </span>ON
+      </button>
+      <button class="toggle">
+        <span class="ico">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/>
+          </svg>
+        </span>Recording
+      </button>
+    </div>
+
+    <p class="time"><b>00:03</b> <span>/ 03:06</span> <em>tiến độ cả video</em></p>
+
+    <div class="transport">
+      <button class="tbtn" aria-label="Lùi 5 giây" title="Lùi 5 giây">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+          <path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6"/>
+        </svg>
+        <span class="n" style="left:14px;top:25px">5</span>
+      </button>
+      <button class="tbtn" aria-label="Phát">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="tbtn" aria-label="Tới 5 giây" title="Tới 5 giây">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+          <path d="M12 5V2l5 4-5 4V7a6 6 0 1 0 6 6"/>
+        </svg>
+        <span class="n" style="left:21px;top:25px">5</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ============ 2. RECORDING ============ -->
+  <div class="state-label">2 · Recording — đang ghi âm (video đã mute)</div>
+  <div class="card">
+    <div class="stage live"><span class="play-ghost">▶</span></div>
+
+    <div class="sub">
+      <p class="sd-jp" lang="ja">
+        とても<ruby>時間<rt aria-hidden="true">じかん</rt></ruby>に<ruby>正確<rt aria-hidden="true">せいかく</rt></ruby>です。
+      </p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="controls">
+      <button class="toggle off" title="Tắt tiếng video khi thu để không lọt vào mic">
+        <span class="ico">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m17 9 5 6M22 9l-5 6"/>
+          </svg>
+        </span>OFF
+      </button>
+      <button class="toggle rec-on" aria-pressed="true">
+        <span class="rec-dot"></span>Recording
+        <span class="rec-time">00:04</span>
+      </button>
+    </div>
+
+    <p class="time"><b>00:12</b> <span>/ 03:06</span></p>
+
+    <div class="transport">
+      <button class="tbtn" aria-label="Lùi 5 giây">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+          <path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6"/>
+        </svg><span class="n" style="left:14px;top:25px">5</span>
+      </button>
+      <button class="tbtn" aria-label="Tạm dừng">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+      </button>
+      <button class="tbtn" aria-label="Tới 5 giây">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+          <path d="M12 5V2l5 4-5 4V7a6 6 0 1 0 6 6"/>
+        </svg><span class="n" style="left:21px;top:25px">5</span>
+      </button>
+    </div>
+
+    <div class="level" id="level"></div>
+  </div>
+
+  <!-- ============ 3. TRANSCRIBING ============ -->
+  <div class="state-label">3 · Transcribing — đang gửi Google Speech-to-Text</div>
+  <div class="card">
+    <p class="blk-title">Bản ghi của bạn</p>
+    <div class="player">
+      <button class="tbtn" style="width:34px;height:34px" aria-label="Phát bản ghi">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <span class="bar"><i></i><b></b></span>
+      <span class="t">0:02 / 0:05</span>
+    </div>
+    <div class="stt-loading">
+      <span class="dots"><i></i><i></i><i></i></span> Đang nhận dạng giọng nói…
+    </div>
+  </div>
+
+  <!-- ============ 4. RESULT ============ -->
+  <div class="state-label">4 · Result — đọc sai 1 từ (電車 → 電卓)</div>
+  <div class="card">
+    <p class="blk-title">Bản ghi của bạn</p>
+    <div class="player">
+      <button class="tbtn" style="width:34px;height:34px" aria-label="Phát bản ghi">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <span class="bar"><i></i><b></b></span>
+      <span class="t">0:05 / 0:05</span>
+    </div>
+
+    <div class="result">
+      <div class="result-head">
+        <p class="blk-title" style="margin:0">Bạn đã đọc</p>
+        <span class="sc" style="color:#f0c040">67%<small>độ khớp</small></span>
+      </div>
+
+      <p class="hyp" lang="ja">
+        <span class="eq">日本の</span><span class="rp">電卓</span><span class="de">は</span>
+      </p>
+
+      <p class="ref">Câu gốc: <b lang="ja">日本の電車は</b></p>
+
+      <div class="legend">
+        <span style="color:var(--sd-ok)">■ khớp</span>
+        <span style="color:var(--sd-bad)">■ đọc sai</span>
+        <span><s>■ thiếu</s></span>
+      </div>
+
+      <p class="caveat">
+        Điểm độ khớp chỉ mang tính <b>tham khảo</b>: Google STT trả về kanji, và có thể chọn chữ
+        khác với câu gốc dù bạn phát âm hoàn toàn đúng (例: 下さい ↔ ください). Luôn đối chiếu
+        transcript thô bằng mắt.
+      </p>
+
+      <div class="pb-actions">
+        <button class="ghost-btn">Thu lại</button>
+        <button class="ghost-btn">Nhận dạng lại</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 5. ERRORS ============ -->
+  <div class="state-label">5 · Lỗi — quyền mic & STT thất bại</div>
+  <div class="card" style="display:grid;gap:14px">
+    <div class="banner">
+      <span class="bi">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/>
+        </svg>
+      </span>
+      <div>
+        <p>
+          Trình duyệt đang chặn micro.<br>
+          Bấm icon ổ khoá trên thanh địa chỉ → cho phép <b>Microphone</b> → tải lại trang.
+        </p>
+        <button class="ghost-btn">Thử lại</button>
+      </div>
+    </div>
+
+    <div class="banner" style="background:#1a1a16;border-color:#3a3420">
+      <span class="bi" style="color:#f0c040">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17v.5"/>
+        </svg>
+      </span>
+      <div>
+        <p>
+          Không gọi được dịch vụ nhận dạng. <b>Bản ghi vẫn được giữ lại</b> — bạn có thể nghe lại
+          và thử nhận dạng sau.
+        </p>
+        <button class="ghost-btn">Nhận dạng lại</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 6. MOBILE ============ -->
+  <div class="state-label">6 · Mobile — dưới 768px</div>
+  <div class="phone">
+    <div class="stage">VIDEO</div>
+    <div class="sub">
+      <p class="sd-jp" lang="ja">
+        <ruby>日本<rt aria-hidden="true">にほん</rt></ruby>の<ruby>電車<rt aria-hidden="true">でんしゃ</rt></ruby>は
+      </p>
+    </div>
+    <hr class="divider">
+    <div class="controls">
+      <button class="toggle">
+        <span class="ico">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M19.1 4.9a10 10 0 0 1 0 14.2"/>
+          </svg>
+        </span>ON
+      </button>
+      <button class="toggle">
+        <span class="ico">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/>
+          </svg>
+        </span>Record
+      </button>
+    </div>
+    <p class="time"><b>00:03</b> <span>/ 03:06</span></p>
+    <div class="transport">
+      <button class="tbtn" aria-label="Lùi 5 giây">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+          <path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6"/>
+        </svg><span class="n" style="left:16px;top:27px">5</span>
+      </button>
+      <button class="tbtn" aria-label="Phát">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="tbtn" aria-label="Tới 5 giây">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+          <path d="M12 5V2l5 4-5 4V7a6 6 0 1 0 6 6"/>
+        </svg><span class="n" style="left:23px;top:27px">5</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ============ 7. SOCIAL RAIL ============ -->
+  <div class="state-label">7 · Socialicons — icon mới dẫn vào /shadowing</div>
+  <div class="rail-demo">
+    <div class="rail">
+      <ul>
+        <li class="sd-nav" title="Japanese Shadowing">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 3a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3zm5 8a5 5 0 0 1-4 4.9V19h3v2H5v-2h3v-3.1A5 5 0 0 1 4 11h2a3 3 0 0 0 6 0h2z"/>
+            <path d="M16.5 7.5a5 5 0 0 1 0 9v-1.8a3.2 3.2 0 0 0 0-5.4V7.5zm2.6-2.6a8.6 8.6 0 0 1 0 14.2v-1.9a6.8 6.8 0 0 0 0-10.4V4.9z"/>
+          </svg>
+        </li>
+        <li>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.6 2 12.3c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.4-3.4-1.4-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.2-4.6-5.1 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1 .8-.2 1.7-.3 2.5-.3s1.7.1 2.5.3c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.8-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10.3 10.3 0 0 0 22 12.3C22 6.6 17.5 2 12 2z"/></svg>
+        </li>
+        <li>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v7h3v-7h3l1-3h-4v-2c0-.6.4-1 1-1z"/></svg>
+        </li>
+        <li>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.3c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V21H9z"/></svg>
+        </li>
+      </ul>
+      <div class="cap">Follow Me</div>
+    </div>
+    <p class="note">
+      Icon <b>voice</b> tách riêng phía trên, ngăn bằng gạch mảnh — vì đây là điều hướng nội bộ,
+      không phải social link (caption dưới list là “Follow Me”).<br><br>
+      Dùng <code>&lt;Link to="/shadowing"&gt;</code> của react-router, <b>không</b>
+      <code>&lt;a href&gt;</code> — nếu không trang sẽ reload và mất hiệu ứng chuyển trang.<br><br>
+      Icon đề xuất: <code>MdRecordVoiceOver</code> (<code>react-icons/md</code>, đã có sẵn
+      trong dependency).
+    </p>
+  </div>
+
+
+  <!-- ===================== PHẦN B — KHU VỰC TẠO DỮ LIỆU ===================== -->
+  <div class="partb-head">
+    <h2>Phần B — Khu vực tạo dữ liệu</h2>
+    <p>
+      Thiết kế, <b>chưa triển khai</b>. Mở <code>/shadowing</code> sẽ hỏi: nhập link YouTube để tự
+      soạn bài, hay import file JSON có sẵn. Phiên lưu tạm trong localStorage, đóng phiên là xoá.
+    </p>
+  </div>
+
+  <!-- ============ 8. CHOOSER ============ -->
+  <div class="state-label">8 · Chooser — chưa có phiên nào</div>
+  <div class="card">
+    <p class="choose-title">Bắt đầu một phiên luyện tập</p>
+
+    <div class="choose-grid">
+      <button type="button" class="choice is-active">
+        <span class="choice__ico">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z" fill="currentColor" stroke="none"/>
+          </svg>
+        </span>
+        <b>Nhập link YouTube</b>
+        <span class="choice__desc">Tự tạo bài mới: dán link, gõ phụ đề theo video, xuất file JSON</span>
+      </button>
+
+      <button type="button" class="choice">
+        <span class="choice__ico">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M9 4H7a3 3 0 0 0-3 3v2a3 3 0 0 1-3 3 3 3 0 0 1 3 3v2a3 3 0 0 0 3 3h2"/>
+            <path d="M15 4h2a3 3 0 0 1 3 3v2a3 3 0 0 0 3 3 3 3 0 0 0-3 3v2a3 3 0 0 1-3 3h-2"/>
+          </svg>
+        </span>
+        <b>Import file JSON</b>
+        <span class="choice__desc">Mở bài đã soạn sẵn từ file .json trên máy (kéo thả cũng được)</span>
+      </button>
+    </div>
+
+    <div class="url-box">
+      <label for="yt">Link hoặc ID video</label>
+      <div class="url-row">
+        <input id="yt" type="text" value="https://www.youtube.com/watch?v=ZcKxZfyEFBc" readonly>
+        <button type="button" class="primary-btn">Bắt đầu</button>
+      </div>
+      <p class="url-ok">Nhận ra: <code>ZcKxZfyEFBc</code></p>
+    </div>
+
+    <p class="sd-hint" style="margin-top:20px">
+      Dữ liệu lưu tạm trong trình duyệt này. Nhớ xuất JSON trước khi đóng phiên.
+    </p>
+  </div>
+
+  <!-- ============ 9. SESSION BAR ============ -->
+  <div class="state-label">9 · Thanh phiên — hai chế độ</div>
+  <div class="sess-bar">
+    <span class="sess-tag">JSON</span>
+    <span>Phiên: <b>tau-dien.json</b> · 5 câu</span>
+    <span class="sess-spacer"></span>
+    <button type="button" class="sd-ghost-btn">Chuyển sang sửa</button>
+    <button type="button" class="sd-ghost-btn">Đóng phiên</button>
+  </div>
+  <div class="sess-bar" style="margin-top:10px">
+    <span class="sess-tag is-author">TẠO</span>
+    <span>Phiên tạo mới · <code>ZcKxZfyEFBc</code> · 3 câu</span>
+    <span class="warn-dot" title="Chưa xuất JSON lần nào">chưa xuất JSON</span>
+    <span class="sess-spacer"></span>
+    <button type="button" class="primary-btn sm">Xuất JSON</button>
+    <button type="button" class="sd-ghost-btn">Đóng phiên</button>
+  </div>
+
+  <!-- ============ 10. AUTHOR ============ -->
+  <div class="state-label">10 · Author — soạn bài theo video</div>
+  <div class="card wide">
+    <div class="author-top">
+      <div class="stage mini"><span class="play-ghost">▶</span></div>
+      <div class="author-prev">
+        <p class="sd-blk-title" style="margin-bottom:6px">Câu đang chạy</p>
+        <p class="sd-jp" style="font-size:22px" lang="ja">
+          <ruby>日本<rt aria-hidden="true">にほん</rt></ruby>の<ruby>電車<rt aria-hidden="true">でんしゃ</rt></ruby>は
+        </p>
+        <p class="time" style="padding:0;margin-top:10px"><b>00:11</b> <span>/ 02:43</span></p>
+        <div class="transport" style="padding:0;margin-top:10px">
+          <button class="tbtn" aria-label="Lùi 5 giây"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6"/></svg></button>
+          <button class="tbtn" aria-label="Phát"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+          <button class="tbtn" aria-label="Tới 5 giây"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 5V2l5 4-5 4V7a6 6 0 1 0 6 6"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" style="max-width:100%">
+
+    <p class="sd-blk-title">Thông tin bài</p>
+    <div class="meta-grid">
+      <label>Tiêu đề JP <input type="text" value="日本の電車" readonly></label>
+      <label>Tiêu đề VI <input type="text" value="Tàu điện ở Nhật" readonly></label>
+      <label>Level <input type="text" value="N4" readonly></label>
+      <label>Tags <input type="text" value="daily-life, transport" readonly></label>
+    </div>
+
+    <div class="lines-head">
+      <p class="sd-blk-title" style="margin:0">Các câu (3)</p>
+      <div class="lines-actions">
+        <button type="button" class="primary-btn sm">+ Thêm câu tại 00:11</button>
+        <button type="button" class="sd-ghost-btn">Chốt end</button>
+        <button type="button" class="sd-ghost-btn">⚡ Tự điền ô trống</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="ltable">
+        <thead>
+          <tr><th>#</th><th>start</th><th>end</th><th>jp</th><th>kana</th><th>vi</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td><td>0.00</td><td>6.00</td>
+            <td lang="ja">日本の電車は</td>
+            <td class="auto" lang="ja">にほんのでんしゃは</td>
+            <td class="auto">Tàu điện ở Nhật thì…</td>
+            <td class="ops">⚡ ▸ ↕ 🗑</td>
+          </tr>
+          <tr class="is-current">
+            <td>2</td><td>6.00</td><td>11.50</td>
+            <td lang="ja">とても時間に正確です。</td>
+            <td class="auto" lang="ja">とてもじかんにせいかくです</td>
+            <td class="manual">rất đúng giờ.</td>
+            <td class="ops">⚡ ▸ ↕ 🗑</td>
+          </tr>
+          <tr class="is-open">
+            <td>3</td><td>11.50</td><td class="open">…</td>
+            <td class="editing" lang="ja">一分でも遅れると、</td>
+            <td></td><td></td>
+            <td class="ops">⚡ ▸ ↕ 🗑</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="legend-note">
+      <span class="sw auto"></span> máy điền &nbsp;·&nbsp;
+      <span class="sw manual"></span> người sửa tay (⚡ sẽ bỏ qua) &nbsp;·&nbsp;
+      <span class="sw open"></span> dòng đang mở, chưa có end
+    </p>
+
+    <div class="validate bad">
+      <b>⚠ 1 vấn đề</b>
+      <ul><li>câu 3: chưa có <code>end</code> — bấm “Chốt end” hoặc thêm câu tiếp theo</li></ul>
+      <p class="validate__foot">Còn vấn đề thì nút <b>Xuất JSON</b> bị khoá.</p>
+    </div>
+  </div>
+
+  <!-- ============ 11. TOKEN EDITOR ============ -->
+  <div class="state-label">11 · Editor furigana — bất biến jp = ghép tokens</div>
+  <div class="card">
+    <div class="tok-head">
+      <p class="sd-blk-title" style="margin:0">Câu 2 · furigana</p>
+      <button type="button" class="sd-ghost-btn">Đóng</button>
+    </div>
+
+    <p class="sd-jp" style="font-size:24px;margin:14px 0 18px" lang="ja">
+      とても<ruby>時間<rt aria-hidden="true">じかん</rt></ruby>に<ruby>正確<rt aria-hidden="true">せいかく</rt></ruby>です。
+    </p>
+
+    <div class="tok-grid">
+      <div class="tok"><input value="とても" readonly><input placeholder="—" readonly></div>
+      <div class="tok has-r"><input value="時間" readonly><input value="じかん" readonly></div>
+      <div class="tok"><input value="に" readonly><input placeholder="—" readonly></div>
+      <div class="tok has-r"><input value="正確" readonly><input value="せいかく" readonly></div>
+      <div class="tok"><input value="です。" readonly><input placeholder="—" readonly></div>
+    </div>
+
+    <p class="tok-check ok">
+      Ghép lại: <b lang="ja">とても時間に正確です。</b> = jp ✓
+    </p>
+    <div class="pb-actions">
+      <button type="button" class="sd-ghost-btn">+ Tách ô</button>
+      <button type="button" class="sd-ghost-btn">Gộp với ô sau</button>
+      <button type="button" class="sd-ghost-btn">⚡ Tự điền lại</button>
+    </div>
+
+    <p class="tok-check bad" style="margin-top:22px">
+      Ghép lại: <b lang="ja">日本の電車</b> ≠ jp <b lang="ja">日本の電車は</b> — thiếu「は」
+    </p>
+    <p class="sd-hint">Trạng thái lỗi: viền đỏ, nút Xuất JSON bị khoá cho tới khi khớp.</p>
+  </div>
+
+  <!-- ============ 12. AUTO FILL ============ -->
+  <div class="state-label">12 · Tự điền — đang gọi và kết quả</div>
+  <div class="card">
+    <div class="sd-stt__loading" style="margin-bottom:22px">
+      <span class="sd-dots"><i></i><i></i><i></i></span>
+      Đang tự điền 12 câu…
+    </div>
+
+    <p class="sd-blk-title">Kết quả</p>
+    <div class="fill-res">
+      <p><b class="ok-t">10 câu</b> điền đủ kana / romaji / nghĩa / furigana</p>
+      <p><b class="warn-t">2 câu</b> cần xem lại:</p>
+      <ul>
+        <li>câu 7 — <code>tokens</code> ghép lại không khớp <code>jp</code>, đã hạ cấp thành một đoạn không furigana</li>
+        <li>câu 11 — chứa tên riêng<span lang="ja">「田中」</span>, cách đọc máy đoán có thể sai</li>
+      </ul>
+    </div>
+
+    <p class="sd-caveat">
+      Kết quả tự điền là <b>bản nháp để rà</b>, không phải chân lý. Cách đọc kanji phụ thuộc ngữ cảnh
+      (<span lang="ja">一分</span> → <span lang="ja">いっぷん</span> chứ không phải <span lang="ja">いちふん</span>),
+      và tên riêng thì máy nào cũng hay sai. Ô do máy điền được tô khác màu để biết chỗ nào chưa người xác nhận.
+    </p>
+  </div>
+
+  <!-- ============ 13. CLOSE SESSION ============ -->
+  <div class="state-label">13 · Đóng phiên — chế độ tạo</div>
+  <div class="card">
+    <div class="dialog">
+      <p class="dialog__title">Đóng phiên tạo mới?</p>
+      <p>
+        Toàn bộ <b>3 câu</b> đã nhập sẽ bị xoá khỏi trình duyệt và <b>không thể khôi phục</b>.
+      </p>
+      <p class="dialog__meta">Lần xuất JSON gần nhất: <b class="warn-t">chưa bao giờ</b></p>
+      <div class="pb-actions">
+        <button type="button" class="primary-btn">Xuất JSON rồi đóng</button>
+        <button type="button" class="sd-ghost-btn">Đóng luôn</button>
+        <button type="button" class="sd-ghost-btn">Huỷ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 14. MOBILE ============ -->
+  <div class="state-label">14 · Mobile — bảng thành danh sách thẻ</div>
+  <div class="phone">
+    <div class="sess-bar sm">
+      <span class="sess-tag is-author">TẠO</span>
+      <span class="sess-spacer"></span>
+      <button type="button" class="sd-ghost-btn">Xuất</button>
+    </div>
+    <div class="stage mini" style="margin:12px 0"><span class="play-ghost">▶</span></div>
+    <p class="time" style="padding:0;text-align:center"><b>00:11</b> <span>/ 02:43</span></p>
+    <button type="button" class="primary-btn" style="width:100%;margin:12px 0">+ Thêm câu tại 00:11</button>
+
+    <div class="lcard">
+      <div class="lcard__head"><b>Câu 2</b><span class="ops">⚡ ▸ ↕ 🗑</span></div>
+      <p class="lcard__time">06.00 → 11.50</p>
+      <p lang="ja" class="lcard__jp">とても時間に正確です。</p>
+      <p class="lcard__sub auto" lang="ja">とてもじかんにせいかくです</p>
+      <p class="lcard__sub manual">rất đúng giờ.</p>
+    </div>
+    <div class="lcard is-open">
+      <div class="lcard__head"><b>Câu 3</b><span class="ops">⚡ ▸ ↕ 🗑</span></div>
+      <p class="lcard__time">11.50 → <span class="open">…</span></p>
+      <p lang="ja" class="lcard__jp">一分でも遅れると、</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // thanh level mic giả lập cho trạng thái Recording
+  var bars = [6,13,19,11,5,9,17,22,14,8,4,10,16,20,12,7,3,8,15,21,13,6,9,14,18,10,5,11,17,7];
+  var lv = document.getElementById('level');
+  bars.forEach(function (h) {
+    var i = document.createElement('i');
+    i.style.height = h + 'px';
+    lv.appendChild(i);
+  });
+</script>
+</body>
+</html>

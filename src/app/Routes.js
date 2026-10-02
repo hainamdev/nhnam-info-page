@@ -2,6 +2,7 @@ import React from "react";
 import withRouter from "../hooks/withRouter"
 import { Navigate, Route, Routes} from "react-router-dom";
 import { Home } from "../pages/home";
+import { Shadowing } from "../pages/shadowing";
 // import { Portfolio } from "../pages/portfolio";
 // import { ContactUs } from "../pages/contact";
 // import { About } from "../pages/about";
@@ -21,6 +22,8 @@ const AnimatedRoutes = withRouter(({ location }) => (
     >
       <Routes location={location}>
         <Route exact path="/" element={<Home />} />
+        {/* Route cụ thể phải nằm TRƯỚC catch-all bên dưới */}
+        <Route path="/shadowing" element={<Shadowing />} />
         {/* <Route path="/about" element={<About />} />
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/contact" element={<ContactUs />} /> */}

@@ -1,0 +1,35 @@
+rules_version = '2';
+
+// Trang cá nhân, chỉ một chủ sở hữu.
+// ⚠️ THAY 'REPLACE_WITH_YOUR_UID' bằng uid thật trước khi deploy:
+//    Firebase Console -> Authentication -> Users -> cột User UID
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isOwner() {
+      return request.auth != null
+          && request.auth.uid == 'REPLACE_WITH_YOUR_UID';
+    }
+
+    // Bài học: nhập liệu qua Console hoặc script admin, client chỉ đọc
+    match /shadowing_videos/{videoId} {
+      allow read:  if isOwner();
+      allow write: if false;
+    }
+
+    // Lịch sử luyện tập: CHỈ Cloud Function (Admin SDK, bỏ qua rules) được ghi.
+    // Nếu cho client ghi thì score/confidence do client tự khai -> dữ liệu vô nghĩa.
+    match /shadowing_attempts/{attemptId} {
+      allow read:   if isOwner() && resource.data.ownerUid == request.auth.uid;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    // Mặc định từ chối mọi thứ khác
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
